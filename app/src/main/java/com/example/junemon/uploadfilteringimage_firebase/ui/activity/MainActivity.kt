@@ -3,12 +3,10 @@ package com.example.junemon.uploadfilteringimage_firebase.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSignIn
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.sharedLoadDesiredFragment
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.chat.ChatFragment
@@ -88,9 +86,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestSignIn) {
             if (resultCode == Activity.RESULT_OK) {
-                sharedLoadDesiredFragment(null, supportFragmentManager, ProfileFragment())
+//                sharedLoadDesiredFragment(null, supportFragmentManager, ProfileFragment())
+                Toast.makeText(this, "Sign in", Toast.LENGTH_SHORT).show()
+
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
     }

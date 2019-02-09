@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mDatabaseReference
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.userDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 
 class HomeFragment : Fragment(), HomeFragmentView {
@@ -14,7 +15,7 @@ class HomeFragment : Fragment(), HomeFragmentView {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         this.ctx = context
-        presenter = HomeFragmentPresenter(mDatabaseReference, this, this)
+        presenter = HomeFragmentPresenter(mDatabaseReference, userDatabaseReference, this, this)
         presenter.onAttach(ctx)
 
     }
@@ -31,4 +32,7 @@ class HomeFragment : Fragment(), HomeFragmentView {
         presenter.onCreateView(view)
     }
 
+    fun initiateSignOut() {
+        presenter.onSignOutAndCleanUp()
+    }
 }

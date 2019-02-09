@@ -13,6 +13,13 @@
     <Button android:layout_width="wrap_content"
             android:layout_gravity="bottom"
             android:layout_height="wrap_content"
+            android:text="login"
             android:id="@+id/btnLogin"/>
+
+    <Button android:layout_width="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_height="wrap_content"
+            android:text="logout"
+            android:id="@+id/btnLogout"/>
 
 </LinearLayout>

@@ -25,7 +25,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
-class ImageUtils(var ctx:Context?) {
+class ImageUtils(var ctx: Context?) {
 
     fun getBitmapFromAssets(fileName: String, widthImage: Int, heightImage: Int): Bitmap? {
         val assetManager: AssetManager = ctx?.assets!!
@@ -116,15 +116,15 @@ class ImageUtils(var ctx:Context?) {
 
     private fun openCamera(views: View, imageFile: File) {
         val snackbar = Snackbar
-                .make(views, "Image saved to gallery!", Snackbar.LENGTH_LONG)
-                .setAction("OPEN") {
-                    val i = Intent(Intent.ACTION_VIEW)
-                    i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    val uri =
-                            FileProvider.getUriForFile(ctx!!, ctx!!.resources.getString(R.string.package_name), imageFile)
-                    i.setDataAndType(uri, "image/*")
-                    ctx?.startActivity(i)
-                }
+            .make(views, "Image saved to gallery!", Snackbar.LENGTH_LONG)
+            .setAction("OPEN") {
+                val i = Intent(Intent.ACTION_VIEW)
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                val uri =
+                    FileProvider.getUriForFile(ctx!!, ctx!!.resources.getString(R.string.package_name), imageFile)
+                i.setDataAndType(uri, "image/*")
+                ctx?.startActivity(i)
+            }
         snackbar.show()
     }
 

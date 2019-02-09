@@ -1,6 +1,7 @@
 package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.view.View
 import android.widget.Toast
@@ -15,6 +16,8 @@ import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
 import com.example.junemon.uploadfilteringimage_firebase.data.ProfileViewModel
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
+import com.example.junemon.uploadfilteringimage_firebase.ui.activity.MainActivity
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -33,12 +36,15 @@ class ProfileFragmentPresenter(
     private var pref: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null
     private var vm: ProfileViewModel? = null
+    private lateinit var intentToMainActivity: Intent
+
 
     override fun onAttach(context: Context?) {
         this.ctx = context
         currentUser = mFirebaseAuth.currentUser
         pref = ctx?.applicationContext?.getSharedPreferences(prefToken, Context.MODE_PRIVATE)
         editor = pref?.edit()
+        intentToMainActivity = Intent(ctx, MainActivity::class.java)
         vm = ViewModelProviders.of(target).get(ProfileViewModel::class.java)
     }
 
@@ -59,6 +65,13 @@ class ProfileFragmentPresenter(
         }
     }
 
+    fun setLogoutData() {
+        ctx?.let { AuthUI.getInstance().signOut(it) }
+        editor?.putString(KEY, ctx?.resources?.getString(R.string.user_logout))
+        editor?.apply()
+        ctx?.startActivity(intentToMainActivity)
+    }
+
     fun getUserData(username: String?) {
         listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             if (firebaseAuth != null) {
@@ -75,6 +88,7 @@ class ProfileFragmentPresenter(
                         jsonModelToString = gson.toJson(userFromFirebase)
                         editor?.putString(KEY, jsonModelToString)
                         editor?.apply()
+                        ctx?.startActivity(intentToMainActivity)
                     } else {
                         Toast.makeText(
                             ctx,

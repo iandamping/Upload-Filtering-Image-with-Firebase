@@ -13,7 +13,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 
-class HomeFragmentPresenter(var dataReference: DatabaseReference, var mView: HomeFragmentView, var target: Fragment) :
+class HomeFragmentPresenter(
+    var dataReference: DatabaseReference,
+    var userDataReference: DatabaseReference,
+    var mView: HomeFragmentView,
+    var target: Fragment
+) :
     BaseFragmentPresenter, ChildEventListener {
     private lateinit var uploadModel: UploadImageModel
     private lateinit var vm: HomeViewmodel
@@ -31,6 +36,7 @@ class HomeFragmentPresenter(var dataReference: DatabaseReference, var mView: Hom
 
     fun onSignOutAndCleanUp() {
         dataReference.removeEventListener(this)
+        userDataReference.removeEventListener(this)
     }
 
     override fun onCancelled(p0: DatabaseError) {

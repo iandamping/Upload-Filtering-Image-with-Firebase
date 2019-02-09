@@ -2,6 +2,7 @@ package com.example.junemon.uploadfilteringimage_firebase.ui.activity
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.KEY
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.gson
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.prefToken
@@ -15,6 +16,7 @@ class MainActivityPresenter(var mView: MainActivityView) : BasePresenter {
     //    private lateinit var gson: Gson
     private lateinit var ctx: Context
     private lateinit var type: Type
+    private lateinit var preferences: SharedPreferences
     private lateinit var userModelData: UserModel
     override fun getContext(): Context? {
         return ctx
@@ -28,10 +30,11 @@ class MainActivityPresenter(var mView: MainActivityView) : BasePresenter {
     override fun onStop() {
     }
 
+
     fun getUserData() {
-        val prefs = ctx.getSharedPreferences(prefToken, MODE_PRIVATE)
-        val userData = prefs?.getString(KEY, "zero")
-        if (!userData.equals("zero", ignoreCase = true)) {
+        preferences = ctx.getSharedPreferences(prefToken, MODE_PRIVATE)
+        val userData = preferences.getString(KEY, ctx.resources?.getString(R.string.user_logout))
+        if (!userData.equals(ctx.resources?.getString(R.string.user_logout), ignoreCase = true)) {
             userModelData = gson.fromJson(userData, type)
             mView.onGetDataBack(userModelData)
         } else {

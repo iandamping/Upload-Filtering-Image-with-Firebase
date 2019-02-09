@@ -18,8 +18,8 @@ class ProfileFragment : Fragment(), ProfileFragmentView {
     private val userKeyPass = "asdwafas"
     private var userName: String? = null
     private lateinit var presenter: ProfileFragmentPresenter
-
     private val loginProvider = arrayListOf(
+        AuthUI.IdpConfig.FacebookBuilder().build(),
         AuthUI.IdpConfig.GoogleBuilder().build()
     )
 
@@ -59,6 +59,9 @@ class ProfileFragment : Fragment(), ProfileFragmentView {
     override fun initView(view: View) {
         view.btnLogin.setOnClickListener {
             createSignInIntent()
+        }
+        view.btnLogout.setOnClickListener {
+            presenter.setLogoutData()
         }
     }
 
