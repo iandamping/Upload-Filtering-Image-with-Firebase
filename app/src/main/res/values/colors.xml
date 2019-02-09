@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="dc_gray">#ff888888</color>
+    <color name="textColorPrimary">#6d6f71</color>
+    <color name="textColorSecondary">#898f8f</color>
+    <color name="windowBackground">#ffffff</color>
+    <color name="splashBackground">#fafafa</color>
+    <color name="controlOff">#727272</color>
+    <color name="controlOn">@color/colorAccent</color>
+    <color name="divider">#1F000000</color>
+    <color name="dc_white">#ffffff</color>
+    <color name="dc_black">#383838</color>
+    <color name="navigationBottomColor">@color/dc_white</color>
+    <color name="navigationBarColor">@color/dc_black</color>
+    <color name="dc_lightgray">#b7b7b7</color>
+    <color name="dc_lightestgray">#dfdfdf</color>
+    <color name="dc_darkgray">#4b4b4b</color>
+    <color name="dc_red">#E74C3C</color>
+    <color name="dc_darkred">#B63257</color>
+    <color name="dc_blue_ocean">#42a5f4</color>
+    <color name="dc_dark_blue">#0077c1</color>
+    <color name="dc_green">#56b74a</color>
+    <color name="dc_green_dark">#13A503</color>
+    <color name="dc_green_dark2">#197548</color>
+    <color name="dc_lightgreen">#eefce1</color>
+    <color name="dc_transparent">@android:color/transparent</color>
+    <color name="keyNormal">#ECEFF1</color>
+    <color name="keyPressed">#D1D6D9</color>
+    <color name="dc_yellow">#bfc901</color>
+
+    <color name="dc_tosca">#645cce93</color>
+
+    <color name="gold">#503025</color>
+    <color name="color_tab_quran">#8fffa1</color>
+    <color name="color_tab_quran2">#AA4e805b</color>
+    <color name="color_bar">#4e805b</color>
+    <color name="transparent_actionbar_color">#AA4e805b</color>
+    <color name="primary">#5D4037</color>
+    <color name="primary_dark">#3E2723</color>
+    <color name="panel_background_color">#cc000000</color>
+    <color name="translation_hdr_color">#ff649ab8</color>
+    <color name="translation_highlight">#ff33b5e5</color>
+    <color name="toolbar_background">#ed2b5836</color>
+    <color name="toolbar_item_pressed">#552bff36</color>
+    <color name="selection_highlight">#404694A6</color>
+    <color name="audio_highlight">#4046A646</color>
+    <color name="note_highlight">#40EBEB21</color>
+    <color name="bookmark_highlight">#40A4A4A4</color>
+    <color name="sura_details_color">#9B9798</color>
+    <color name="page_background">#FFF4CB</color>
+    <color name="sura_info_color">#010101</color>
+    <color name="hizb_number_color">#FF000000</color>
+    <color name="translation_sura_header">#ff649ab8</color>
+    <color name="overlay_text_color">#ff888888</color>
+    <color name="header_text_color">#31B6E7</color>
+
+    <color name="notification_color">#006634</color>
+    <color name="textAndIcon">#FFFFFF</color>
+    <color name="textPrimary">#212121</color>
+
+</resources>

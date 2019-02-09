@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+            android:id="@+id/NavigationHome"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/home_nav"
+            app:showAsAction="ifRoom" />
+
+    <item
+            android:id="@+id/NavigationChat"
+            android:icon="@drawable/ic_add_box_black_24dp"
+            android:title="@string/chatting_nav"
+            app:showAsAction="ifRoom" />
+
+    <item
+            android:id="@+id/NavigationProfile"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/profile_nav"
+            app:showAsAction="ifRoom" />
+
+</menu>

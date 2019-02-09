@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">UploadFilteringImage_Firebase</string>
+    <string name="home_nav">Home</string>
+    <string name="chatting_nav">Chatting</string>
+    <string name="profile_nav">Profile</string>
+    <string name="login_failed">Login first</string>
+    <string name="package_name">com.example.junemon.uploadfilteringimage_firebase.provider</string>
+</resources>
