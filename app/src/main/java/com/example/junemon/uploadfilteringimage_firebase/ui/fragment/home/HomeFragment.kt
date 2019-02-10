@@ -2,16 +2,16 @@ package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.userDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
+import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.HomeFragmentAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), HomeFragmentView {
@@ -19,6 +19,7 @@ class HomeFragment : Fragment(), HomeFragmentView {
     private var ctx: Context? = null
     private val userKeyPass = "asdwafas"
     private var userName: String? = null
+    private var listAllData: MutableList<UploadImageModel> = mutableListOf()
 
     fun newInstance(userName: String?): HomeFragment {
         val bundle = Bundle()
@@ -43,19 +44,22 @@ class HomeFragment : Fragment(), HomeFragmentView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val views:View = inflater.inflate(R.layout.fragment_home, container,false)
+        val views: View = inflater.inflate(R.layout.fragment_home, container, false)
         return views
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter.onGetDataback()
     }
 
     override fun onGetDataback(data: UploadImageModel?) {
+        rvHomeFragment.layoutManager = LinearLayoutManager(ctx)
         if (data != null) {
-            ctx?.let { Glide.with(it).load(data.photoUrl).into(ivFirebaseImage) }
-            tvFirebaseName.text = data.text
-            tvFirebaseChats.text = data.text
+            listAllData.add(data)
+            rvHomeFragment.adapter = HomeFragmentAdapter(ctx, listAllData) {
+
+            }
         }
     }
 

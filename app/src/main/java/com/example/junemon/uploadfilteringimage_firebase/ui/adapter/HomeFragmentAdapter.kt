@@ -9,15 +9,15 @@ import com.bumptech.glide.Glide
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_messages_sent.*
+import kotlinx.android.synthetic.main.item_fragment_home.*
 
-class OneMessageAdapter(
+class HomeFragmentAdapter(
     var ctx: Context?,
     var listMessage: List<UploadImageModel>,
     val listener: (UploadImageModel) -> Unit
-) : RecyclerView.Adapter<OneMessageAdapter.viewHolder>() {
+) : RecyclerView.Adapter<HomeFragmentAdapter.viewHolder>() {
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): viewHolder {
-        return viewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_messages_sent, p0, false), ctx)
+        return viewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_fragment_home, p0, false), ctx)
     }
 
     override fun getItemCount(): Int = listMessage.size
@@ -30,12 +30,9 @@ class OneMessageAdapter(
         LayoutContainer {
 
         fun bindView(data: UploadImageModel, listener: (UploadImageModel) -> Unit) {
-            if (data.photoUrl != null) {
-                ivMessageSent.visibility = View.VISIBLE
-                ctx?.let { Glide.with(it).load(data.photoUrl).into(ivMessageSent) }
-            } else {
-                tvMessageSent.text = data.text
-            }
+            tvFirebaseName.text = data.name
+            tvFirebaseDesc.text = data.text
+            ctx?.let { Glide.with(it).load(data.photoUrl).into(ivFirebaseImage) }
             itemView.setOnClickListener {
                 listener(data)
             }

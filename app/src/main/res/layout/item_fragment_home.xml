@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_margin="@dimen/spacing_medium"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_toEndOf="@id/ivFirebaseProfileImage"
+                  android:id="@+id/tvFirebaseName"
+                  tools:text="Ian Christian"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+                android:background="@drawable/roundless_circle"
+                android:id="@+id/ivFirebaseProfileImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"/>
+
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/ic_person_black_24dp"
+            android:id="@+id/ivFirebaseImage"/>
+
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/tvFirebaseDesc"
+              tools:text="greate photos"/>
+
+
+</LinearLayout>
