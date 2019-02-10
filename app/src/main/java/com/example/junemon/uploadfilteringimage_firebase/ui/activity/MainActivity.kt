@@ -12,12 +12,12 @@ import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.chat.ChatFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home.HomeFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile.ProfileFragment
+import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.UploadActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener, MainActivityView {
     private lateinit var presenter: MainActivityPresenter
-    //    private var vm: ProfileViewModel? = null
     private var userName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +33,17 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return when (item.itemId) {
 
             R.id.NavigationHome -> {
+                LoadChatFragmentWithValue(null, userName)
                 true
             }
             R.id.NavigationChat -> {
+                if (userName != null) {
+                    val i = Intent(this, UploadActivity::class.java)
+                    startActivity(i)
+                } else {
+                    Toast.makeText(this, resources.getString(R.string.login_failed), Toast.LENGTH_SHORT).show()
+                }
 //                sharedLoadDesiredFragment(null, supportFragmentManager, ChatFragment())
-                LoadChatFragmentWithValue(null, userName)
                 true
             }
             R.id.NavigationProfile -> {
@@ -74,21 +80,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             .commit()
     }
 
-//    private fun getUserData() {
-//        vm = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-//        vm?.getFirebaseUser()?.observe(this, Observer {
-//            userName = it.displayName
-//        })
-//    }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestSignIn) {
             if (resultCode == Activity.RESULT_OK) {
 //                sharedLoadDesiredFragment(null, supportFragmentManager, ProfileFragment())
-                Toast.makeText(this, "Sign in", Toast.LENGTH_SHORT).show()
-
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show()
                 finish()

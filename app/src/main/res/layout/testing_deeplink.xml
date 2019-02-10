@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:background="@color/com_facebook_likeview_text_color"
+                android:layout_height="match_parent">
+
+    <com.facebook.login.widget.LoginButton
+            android:id="@+id/fbBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"/>
+
+    <TextView android:layout_width="wrap_content"
+              android:id="@+id/tvDeeplink"
+              android:layout_below="@id/fbBtn"
+              android:visibility="gone"
+              android:layout_height="wrap_content"
+              android:textColor="@color/dc_white"
+              android:gravity="center"
+              android:layout_centerInParent="true"
+              android:text="YOU ARE NOW ON DEEP LINK"/>
+
+</RelativeLayout>

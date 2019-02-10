@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.example.junemon.uploadfilteringimage_firebase">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.example.junemon.uploadfilteringimage_firebase">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.front" android:required="false" />
+
 
     <application
             android:allowBackup="true"
@@ -16,6 +25,34 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+
+        <activity android:name=".testingActivity"
+                  android:label="Junemon Upload Image">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <!-- Accepts URIs that begin with "http://recipe-app.com/recipe" -->
+                <data android:scheme="http"
+                      android:host="junemon.com"
+                      android:pathPrefix="/" />
+            </intent-filter>
+
+            <!-- Accept adb data flag -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                      android:host="junemon.com"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.fragment.upload.UploadActivity"
+                  android:screenOrientation="portrait"/>
+
+
         <provider android:authorities="${applicationId}.provider"
                   android:name="androidx.core.content.FileProvider"
                   android:exported="false"
@@ -26,7 +63,7 @@
         </provider>
         <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
-                android:value="@string/facebook_application_id" />
+                android:value="@string/facebook_application_id"/>
         <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
     </application>
 

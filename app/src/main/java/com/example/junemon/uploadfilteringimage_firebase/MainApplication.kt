@@ -17,11 +17,12 @@ class MainApplication {
     companion object {
         const val KEY = "data"
         const val prefToken = "tokenizer"
-        var mFirebaseDatabase: FirebaseDatabase
+        val IMAGE_NAME: String = "beauty_woman.jpg"
+        var mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+        var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
         var gson: Gson
         var mDatabaseReference: DatabaseReference
         var userDatabaseReference: DatabaseReference
-        var mFirebaseAuth: FirebaseAuth
         private val uploadNodePhotos = "photo"
         private val uploadNodeUser = "users"
         val defaultMessageLimit = 1000
@@ -34,10 +35,9 @@ class MainApplication {
         val maxHeight = 816
 
         init {
-            mFirebaseDatabase = FirebaseDatabase.getInstance()
-            mFirebaseAuth = FirebaseAuth.getInstance()
             mDatabaseReference = mFirebaseDatabase.reference.child(uploadNodePhotos)
             userDatabaseReference = mFirebaseDatabase.reference.child(uploadNodeUser)
+            System.loadLibrary("NativeImageProcessor")
             gson = Gson()
         }
 

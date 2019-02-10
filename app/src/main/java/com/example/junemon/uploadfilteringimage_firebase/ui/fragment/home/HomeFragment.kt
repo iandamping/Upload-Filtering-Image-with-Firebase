@@ -2,6 +2,7 @@ package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mDatabaseReference
@@ -26,6 +27,10 @@ class HomeFragment : Fragment(), HomeFragmentView {
     }
 
     override fun onGetDataback(data: UploadImageModel?) {
+        if (data != null) {
+            Log.d(this::class.java.simpleName, data.name)
+            Log.d(this::class.java.simpleName, data.text)
+        }
     }
 
     override fun initView(view: View) {

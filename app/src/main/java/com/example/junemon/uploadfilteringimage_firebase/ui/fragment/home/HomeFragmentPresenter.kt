@@ -49,11 +49,15 @@ class HomeFragmentPresenter(
 
     override fun onChildChanged(p0: DataSnapshot, p1: String?) {
         //ini method yang di panggil ketika ada perubahan pada data
+
     }
 
     override fun onChildAdded(p0: DataSnapshot, p1: String?) {
         //ini method yang pertama kali dipanggil ketika ada penambahan data
-        vm.setImageData(p0.getValue(UploadImageModel::class.java)!!)
+        uploadModel = p0.getValue(UploadImageModel::class.java)!!
+        if (uploadModel != null) {
+            vm.setImageData(uploadModel)
+        }
     }
 
     override fun onChildRemoved(p0: DataSnapshot) {
