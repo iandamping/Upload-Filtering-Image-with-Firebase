@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.google.gson.Gson
 import java.io.File
 
@@ -20,11 +22,14 @@ class MainApplication {
         val IMAGE_NAME: String = "beauty_woman.jpg"
         var mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
         var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+        var mFirebaseStorage:FirebaseStorage = FirebaseStorage.getInstance()
         var gson: Gson
         var mDatabaseReference: DatabaseReference
         var userDatabaseReference: DatabaseReference
+        var storageDatabaseReference:StorageReference
         private val uploadNodePhotos = "photo"
         private val uploadNodeUser = "users"
+        private val uploadNodePhotoStorage ="photo_storage"
         val defaultMessageLimit = 1000
         val RequestSelectGalleryImage = 102
         val RequestOpenCamera = 234
@@ -37,6 +42,7 @@ class MainApplication {
         init {
             mDatabaseReference = mFirebaseDatabase.reference.child(uploadNodePhotos)
             userDatabaseReference = mFirebaseDatabase.reference.child(uploadNodeUser)
+            storageDatabaseReference = mFirebaseStorage.getReferenceFromUrl("gs://upload-filter-image.appspot.com/")
             System.loadLibrary("NativeImageProcessor")
             gson = Gson()
         }

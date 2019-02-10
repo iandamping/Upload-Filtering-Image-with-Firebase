@@ -3,13 +3,22 @@ package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.IMAGE_NAME
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestOpenCamera
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSelectGalleryImage
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mDatabaseReference
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.maxHeight
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.maxWidth
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.nonVoidCustomMediaScannerConnection
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveCaptureImagePath
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.storageDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.imagefilteradapter.ViewPagerAdapter
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.edit.EditImageFragment
@@ -21,7 +30,6 @@ import com.zomato.photofilters.imageprocessors.Filter
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter
 import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter
-import kotlinx.android.synthetic.main.activity_upload.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, EditImageListener {
@@ -30,6 +38,7 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
         stat = status
     }
 
+    private var selectedUriForFirebase: Uri? = null
     private lateinit var presenter: UploadPresenter
     private var originalImage: Bitmap? = null
     private var filteredImage: Bitmap? = null
@@ -41,6 +50,7 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
     private var saturationFinal = 1.0f
     private var contrastFinal = 1.0f
     private var stat: Boolean? = null
+    private var name: String? = null
     private lateinit var BitmapUtils: ImageUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +62,7 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
         BitmapUtils = ImageUtils(this)
 
         loadImage()
-        presenter.openImageFromGallery(stat)
+        name = intent.getStringExtra("testing")
         setupViewPager(viewpager)
         tabs.setupWithViewPager(viewpager)
 
@@ -74,7 +84,15 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
                 true
             }
             R.id.action_save -> {
-                presenter.saveImageToGallery(coordinator_layout, stat, finalImage)
+                if (selectedUriForFirebase != null) {
+                    presenter.uploadImageToFirebase(
+                        storageDatabaseReference,
+                        mDatabaseReference, selectedUriForFirebase, name
+                    )
+                } else {
+                    Toast.makeText(this, "Pick image first", Toast.LENGTH_SHORT).show()
+                }
+//                presenter.saveImageToGallery(coordinator_layout, stat, finalImage)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -97,17 +115,41 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestSelectGalleryImage && resultCode == Activity.RESULT_OK) {
-            val bitmap = BitmapUtils.getBitmapFromGallery(data?.data!!, 800, 800)
-            clearBitmapMemory()
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == RequestSelectGalleryImage) {
+                if (data != null) {
+                    selectedUriForFirebase = data.data
+                    val bitmap = BitmapUtils.getBitmapFromGallery(data.data!!, 800, 800)
+                    clearBitmapMemory()
 
-            originalImage = bitmap?.copy(Bitmap.Config.ARGB_8888, true)
-            filteredImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
-            finalImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
-            ivImagePreview.setImageBitmap(originalImage)
-            bitmap?.recycle()
+                    originalImage = bitmap?.copy(Bitmap.Config.ARGB_8888, true)
+                    filteredImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
+                    finalImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
+                    ivImagePreview.setImageBitmap(originalImage)
+                    bitmap?.recycle()
 
-            filtersListFragment?.prepareThumbnail(originalImage);
+                    filtersListFragment?.prepareThumbnail(originalImage);
+                }
+            } else if (requestCode == RequestOpenCamera) {
+                if (data != null) {
+                    selectedUriForFirebase = data.data
+                    val bitmap = BitmapUtils.decodeSampledBitmapFromFile(
+                        nonVoidCustomMediaScannerConnection(
+                            this,
+                            saveCaptureImagePath
+                        ), reqWidth = maxWidth, reqHeight = maxHeight
+                    )
+                    clearBitmapMemory()
+
+                    originalImage = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+                    filteredImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
+                    finalImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
+                    ivImagePreview.setImageBitmap(originalImage)
+                    bitmap.recycle()
+
+                    filtersListFragment?.prepareThumbnail(originalImage)
+                }
+            }
         }
     }
 

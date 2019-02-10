@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSignIn
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.sharedLoadDesiredFragment
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.chat.ChatFragment
@@ -33,12 +34,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return when (item.itemId) {
 
             R.id.NavigationHome -> {
-                LoadChatFragmentWithValue(null, userName)
+                sharedLoadDesiredFragment(null, supportFragmentManager, HomeFragment())
+//                LoadChatFragmentWithValue(null, userName)
                 true
             }
             R.id.NavigationChat -> {
                 if (userName != null) {
                     val i = Intent(this, UploadActivity::class.java)
+                    i.putExtra("testing", userName)
                     startActivity(i)
                 } else {
                     Toast.makeText(this, resources.getString(R.string.login_failed), Toast.LENGTH_SHORT).show()
