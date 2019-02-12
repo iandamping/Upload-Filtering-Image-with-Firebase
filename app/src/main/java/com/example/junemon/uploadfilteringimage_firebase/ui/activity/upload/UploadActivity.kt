@@ -5,8 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -46,12 +44,13 @@ class UploadActivity : AppCompatActivity(),
     private var contrastFinal = 1.0f
     private var stat: Boolean? = null
     private var name: String? = null
+    private var comment: String? = null
     private lateinit var BitmapUtils: ImageUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upload)
-        presenter = UploadPresenter(this, this)
+        presenter = UploadPresenter(this, this, supportFragmentManager)
         presenter.onCreate(this)
         presenter.getAllPermisions()
         BitmapUtils = ImageUtils(this)
@@ -65,38 +64,6 @@ class UploadActivity : AppCompatActivity(),
 
     override fun allPermisionGranted(status: Boolean) {
         stat = status
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.images_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
-            R.id.action_camera -> {
-                invokeCamera()
-                true
-            }
-            R.id.action_open -> {
-                presenter.openImageFromGallery(stat)
-                true
-            }
-            R.id.action_save -> {
-                if (selectedUriForFirebase != null) {
-                    presenter.uploadImageToFirebase(
-                        storageDatabaseReference,
-                        mDatabaseReference, selectedUriForFirebase, name
-                    )
-                } else {
-                    Toast.makeText(this, "Pick image first", Toast.LENGTH_SHORT).show()
-                }
-//                presenter.saveImageToGallery(coordinator_layout, stat, finalImage)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun setupViewPager(vp: ViewPager) {
@@ -151,6 +118,24 @@ class UploadActivity : AppCompatActivity(),
     }
 
     override fun initView() {
+        ivOpenCamera.setOnClickListener {
+            invokeCamera()
+        }
+        ivOpenGallery.setOnClickListener {
+            presenter.openImageFromGallery(stat)
+        }
+        ivSentImage.setOnClickListener {
+            comment = etPhotoComment.text.toString().trim()
+            if (selectedUriForFirebase != null) {
+                presenter.uploadImageToFirebase(
+                    storageDatabaseReference,
+                    mDatabaseReference, selectedUriForFirebase, name, comment
+                )
+            } else {
+                Toast.makeText(this, "Pick image first", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     override fun onFilterSelected(filter: Filter) {

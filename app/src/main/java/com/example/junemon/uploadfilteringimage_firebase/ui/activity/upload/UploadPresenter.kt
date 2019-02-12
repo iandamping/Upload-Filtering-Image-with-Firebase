@@ -12,11 +12,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestOpenCamera
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSelectGalleryImage
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveCaptureImagePath
 import com.example.junemon.uploadfilteringimage_firebase.base.BasePresenter
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
+import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainActivity
+import com.example.junemon.uploadfilteringimage_firebase.utils.DelayedProgressDialog
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
@@ -28,11 +31,17 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import java.io.File
 
 
-class UploadPresenter(var target: FragmentActivity, var mView: UploadView) :
+class UploadPresenter(
+    private val target: FragmentActivity,
+    private val mView: UploadView,
+    private val fm: FragmentManager
+) :
     BasePresenter {
     private lateinit var ctx: Context
     private lateinit var utils: ImageUtils
     private lateinit var uploads: UploadImageModel
+    private lateinit var progressDialog: DelayedProgressDialog
+
     override fun getContext(): Context? {
         return ctx
     }
@@ -40,6 +49,8 @@ class UploadPresenter(var target: FragmentActivity, var mView: UploadView) :
     override fun onCreate(context: Context) {
         ctx = context
         utils = ImageUtils(ctx)
+        mView.initView()
+        progressDialog = DelayedProgressDialog()
     }
 
     override fun onStop() {
@@ -49,17 +60,26 @@ class UploadPresenter(var target: FragmentActivity, var mView: UploadView) :
         storageReference: StorageReference,
         databaseReference: DatabaseReference,
         selectedImage: Uri?,
-        username: String?
+        username: String?,
+        comment: String?
     ) {
         //get last segment path from uri
         if (selectedImage != null) {
+            progressDialog.show(fm, "")
             val spaceRef = storageReference.child(selectedImage.lastPathSegment)
             spaceRef.putFile(selectedImage).addOnSuccessListener {
                 spaceRef.downloadUrl.addOnSuccessListener {
                     //get the download url for image firebase storage
                     val downUri = it
-                    uploads = UploadImageModel("testing kirim photo", username, downUri.toString())
-                    databaseReference.push().setValue(uploads)
+                    uploads = UploadImageModel(comment, username, downUri.toString())
+                    databaseReference.push().setValue(uploads).addOnCompleteListener {
+                        //adding listener if it successfully upload progresdialog shutdown
+                        if (it.isSuccessful) {
+                            progressDialog.cancel()
+                            val i: Intent = Intent(ctx, MainActivity::class.java)
+                            ctx.startActivity(i)
+                        }
+                    }
                 }
             }
         }

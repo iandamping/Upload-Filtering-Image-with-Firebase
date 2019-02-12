@@ -2,24 +2,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:background="@color/com_facebook_likeview_text_color"
-                android:layout_height="match_parent">
+                android:layout_height="360dp">
 
-    <com.facebook.login.widget.LoginButton
-            android:id="@+id/fbBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"/>
+    <!--<ImageView-->
+            <!--android:id="@+id/ivImagePreview"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:src="@drawable/ic_home_black_24dp"-->
+            <!--android:layout_height="360dp"-->
+            <!--android:scaleType="centerCrop"/>-->
 
-    <TextView android:layout_width="wrap_content"
-              android:id="@+id/tvDeeplink"
-              android:layout_below="@id/fbBtn"
-              android:visibility="gone"
-              android:layout_height="wrap_content"
-              android:textColor="@color/dc_white"
-              android:gravity="center"
-              android:layout_centerInParent="true"
-              android:text="YOU ARE NOW ON DEEP LINK"/>
+    <!--<ImageView android:layout_width="30dp"-->
+               <!--android:layout_margin="@dimen/spacing_medium"-->
+               <!--android:layout_height="30dp"-->
+               <!--android:id="@+id/ivOpenCamera"-->
+               <!--android:src="@drawable/ic_camera_alt_white_24dp"/>-->
 
+    <!--<ImageView android:layout_width="30dp"-->
+               <!--android:id="@+id/ivOpenGallery"-->
+               <!--android:layout_toEndOf="@id/ivOpenCamera"-->
+               <!--android:layout_margin="@dimen/spacing_medium"-->
+               <!--android:layout_height="30dp"-->
+               <!--android:src="@drawable/ic_photo_library_white_24dp"/>-->
+
+    <!--<ImageView android:layout_width="30dp"-->
+               <!--android:id="@+id/ivSentImage"-->
+               <!--android:layout_alignParentBottom="true"-->
+               <!--android:layout_alignParentEnd="true"-->
+               <!--android:layout_margin="@dimen/spacing_medium"-->
+               <!--android:layout_height="30dp"-->
+               <!--android:src="@drawable/ic_file_upload_white_24dp"/>-->
+
+    <!--<ImageView android:layout_width="30dp"-->
+               <!--android:id="@+id/ivGiveComment"-->
+               <!--android:layout_alignParentBottom="true"-->
+               <!--android:layout_margin="@dimen/spacing_medium"-->
+               <!--android:layout_height="30dp"-->
+               <!--android:src="@drawable/ic_mode_comment_white_24dp"/>-->
+    <!---->
 </RelativeLayout>
