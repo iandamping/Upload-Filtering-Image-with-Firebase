@@ -1,4 +1,4 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload
+package com.example.junemon.uploadfilteringimage_firebase.ui.activity.upload
 
 import android.app.Activity
 import android.content.Intent
@@ -16,15 +16,13 @@ import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Compani
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.maxHeight
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.maxWidth
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.nonVoidCustomMediaScannerConnection
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveCaptureImagePath
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.storageDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.imagefilteradapter.ViewPagerAdapter
-import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.edit.EditImageFragment
-import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.edit.EditImageListener
-import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.filter.FragmentFilterList
-import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.filter.FragmentFilterListener
+import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.edit.EditImageFragment
+import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.edit.EditImageListener
+import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter.FragmentFilterList
+import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter.FragmentFilterListener
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.zomato.photofilters.imageprocessors.Filter
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter
@@ -32,11 +30,8 @@ import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter
 import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter
 import kotlinx.android.synthetic.main.content_main.*
 
-class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, EditImageListener {
-
-    override fun allPermisionGranted(status: Boolean) {
-        stat = status
-    }
+class UploadActivity : AppCompatActivity(),
+    UploadView, FragmentFilterListener, EditImageListener {
 
     private var selectedUriForFirebase: Uri? = null
     private lateinit var presenter: UploadPresenter
@@ -67,6 +62,11 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
         tabs.setupWithViewPager(viewpager)
 
     }
+
+    override fun allPermisionGranted(status: Boolean) {
+        stat = status
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.images_menu, menu)
@@ -112,6 +112,9 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
         vp.adapter = vpAdapter
     }
 
+    override fun getCameraUri(uris: Uri) {
+        selectedUriForFirebase = uris
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -119,7 +122,7 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
             if (requestCode == RequestSelectGalleryImage) {
                 if (data != null) {
                     selectedUriForFirebase = data.data
-                    val bitmap = BitmapUtils.getBitmapFromGallery(data.data!!, 800, 800)
+                    val bitmap = BitmapUtils.getBitmapFromGallery(data.data!!, maxWidth, maxHeight)
                     clearBitmapMemory()
 
                     originalImage = bitmap?.copy(Bitmap.Config.ARGB_8888, true)
@@ -131,24 +134,18 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
                     filtersListFragment?.prepareThumbnail(originalImage);
                 }
             } else if (requestCode == RequestOpenCamera) {
-                if (data != null) {
-                    selectedUriForFirebase = data.data
-                    val bitmap = BitmapUtils.decodeSampledBitmapFromFile(
-                        nonVoidCustomMediaScannerConnection(
-                            this,
-                            saveCaptureImagePath
-                        ), reqWidth = maxWidth, reqHeight = maxHeight
-                    )
-                    clearBitmapMemory()
+                val bitmap = BitmapUtils.decodeSampledBitmapFromFile(
+                    presenter.createImageFileFromPhoto(), reqWidth = maxWidth, reqHeight = maxHeight
+                )
+                clearBitmapMemory()
 
-                    originalImage = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-                    filteredImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
-                    finalImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
-                    ivImagePreview.setImageBitmap(originalImage)
-                    bitmap.recycle()
+                originalImage = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+                filteredImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
+                finalImage = originalImage?.copy(Bitmap.Config.ARGB_8888, true)
+                ivImagePreview.setImageBitmap(originalImage)
+                bitmap.recycle()
 
-                    filtersListFragment?.prepareThumbnail(originalImage)
-                }
+                filtersListFragment?.prepareThumbnail(originalImage)
             }
         }
     }
@@ -223,6 +220,6 @@ class UploadActivity : AppCompatActivity(), UploadView, FragmentFilterListener, 
     }
 
     private fun invokeCamera() {
-        presenter.openCamera(stat, BitmapUtils.createImageFileFromPhoto())
+        presenter.openCamera(stat)
     }
 }

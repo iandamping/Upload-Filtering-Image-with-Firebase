@@ -1,4 +1,4 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.activity
+package com.example.junemon.uploadfilteringimage_firebase.ui.activity.main
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE

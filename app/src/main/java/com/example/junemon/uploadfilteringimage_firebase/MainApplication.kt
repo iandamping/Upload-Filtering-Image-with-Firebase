@@ -19,17 +19,17 @@ class MainApplication {
     companion object {
         const val KEY = "data"
         const val prefToken = "tokenizer"
-        val IMAGE_NAME: String = "beauty_woman.jpg"
+        val IMAGE_NAME: String = "empty_image.png"
         var mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
         var mFirebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-        var mFirebaseStorage:FirebaseStorage = FirebaseStorage.getInstance()
+        var mFirebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
         var gson: Gson
         var mDatabaseReference: DatabaseReference
         var userDatabaseReference: DatabaseReference
-        var storageDatabaseReference:StorageReference
+        var storageDatabaseReference: StorageReference
         private val uploadNodePhotos = "photo"
         private val uploadNodeUser = "users"
-        private val uploadNodePhotoStorage ="photo_storage"
+        private val uploadNodePhotoStorage = "photo_storage"
         val defaultMessageLimit = 1000
         val RequestSelectGalleryImage = 102
         val RequestOpenCamera = 234
@@ -60,16 +60,17 @@ class MainApplication {
             }
         }
 
-
-        fun nonVoidCustomMediaScannerConnection(ctx: Context?, paths: String?): File {
-            val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-            val passingFile = File(directory, paths)
-            MediaScannerConnection.scanFile(ctx, arrayOf(passingFile.toString()), null) { path, uri ->
-                Log.i("ExternalStorage", "Scanned $path:")
-                Log.i("ExternalStorage", "-> uri=$uri")
-            }
-            return passingFile
-        }
+//
+//        fun nonVoidCustomMediaScannerConnection(ctx: Context?, paths: String?): File {
+//            val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+//            val passingFile = File(directory, paths)
+//            MediaScannerConnection.scanFile(ctx, arrayOf(passingFile.toString()), null) { path, uri ->
+//                Log.i("ExternalStorage", "Scanned $path:")
+//                Log.i("ExternalStorage", "-> uri=$uri")
+//                cameraUri = uri
+//            }
+//            return passingFile
+//        }
 
         fun voidCustomMediaScannerConnection(ctx: Context?, paths: String?) {
             val directory = Environment.getExternalStorageDirectory()

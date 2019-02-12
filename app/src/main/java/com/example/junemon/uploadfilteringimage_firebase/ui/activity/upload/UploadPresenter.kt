@@ -1,22 +1,25 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload
+package com.example.junemon.uploadfilteringimage_firebase.ui.activity.upload
 
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestOpenCamera
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSelectGalleryImage
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveCaptureImagePath
 import com.example.junemon.uploadfilteringimage_firebase.base.BasePresenter
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -30,7 +33,6 @@ class UploadPresenter(var target: FragmentActivity, var mView: UploadView) :
     private lateinit var ctx: Context
     private lateinit var utils: ImageUtils
     private lateinit var uploads: UploadImageModel
-    private var uploadTasks: UploadTask? = null
     override fun getContext(): Context? {
         return ctx
     }
@@ -118,13 +120,13 @@ class UploadPresenter(var target: FragmentActivity, var mView: UploadView) :
 
     }
 
-    fun openCamera(status: Boolean?, files: File) {
+    fun openCamera(status: Boolean?) {
         if (status != null) {
             if (status) {
                 val pictureUri: Uri = FileProvider.getUriForFile(
                     ctx,
                     ctx.resources.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.package_name),
-                    files
+                    createImageFileFromPhoto()
                 )
 
                 val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -135,5 +137,22 @@ class UploadPresenter(var target: FragmentActivity, var mView: UploadView) :
                 target.startActivityForResult(i, RequestOpenCamera)
             }
         }
+    }
+
+    private fun nonVoidCustomMediaScannerConnection(ctx: Context?, paths: String?): File {
+        val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val passingFile = File(directory, paths)
+        MediaScannerConnection.scanFile(ctx, arrayOf(passingFile.toString()), null) { path, uri ->
+            Log.i("ExternalStorage", "Scanned $path:")
+            Log.i("ExternalStorage", "-> uri=$uri")
+            //this is the way to get image uri when capture it with camera
+            mView.getCameraUri(uri)
+
+        }
+        return passingFile
+    }
+
+    fun createImageFileFromPhoto(): File {
+        return nonVoidCustomMediaScannerConnection(ctx, saveCaptureImagePath)
     }
 }

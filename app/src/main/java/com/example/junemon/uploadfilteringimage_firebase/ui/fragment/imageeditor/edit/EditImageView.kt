@@ -1,4 +1,4 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.edit
+package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.edit
 
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentView
 

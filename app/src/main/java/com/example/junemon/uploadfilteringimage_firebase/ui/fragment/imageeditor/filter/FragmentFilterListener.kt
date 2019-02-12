@@ -1,4 +1,4 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.filter
+package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter
 
 import com.zomato.photofilters.imageprocessors.Filter
 

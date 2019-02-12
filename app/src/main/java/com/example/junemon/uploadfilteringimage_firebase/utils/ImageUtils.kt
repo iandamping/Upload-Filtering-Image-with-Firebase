@@ -14,8 +14,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import androidx.core.content.FileProvider
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.nonVoidCustomMediaScannerConnection
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveFilterImagePath
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.voidCustomMediaScannerConnection
 import com.example.junemon.uploadfilteringimage_firebase.R
@@ -80,9 +78,9 @@ class ImageUtils(var ctx: Context?) {
         voidCustomMediaScannerConnection(ctx, saveFilterImagePath)
     }
 
-    fun createImageFileFromPhoto(): File {
-        return nonVoidCustomMediaScannerConnection(ctx, MainApplication.saveCaptureImagePath)
-    }
+//    fun createImageFileFromPhoto(): File {
+//        return nonVoidCustomMediaScannerConnection(ctx, MainApplication.saveCaptureImagePath)
+//    }
 
     //decode File into Bitmap and compress it
     fun decodeSampledBitmapFromFile(imageFile: File, reqWidth: Int, reqHeight: Int): Bitmap {

@@ -65,7 +65,7 @@ class HomeFragmentPresenter(
     }
 
     fun onGetDataback() {
-        vm.getImageData()?.observe(target, Observer {
+        vm.getImageData()?.observe(target.viewLifecycleOwner, Observer {
             mView.onGetDataback(it)
         })
     }

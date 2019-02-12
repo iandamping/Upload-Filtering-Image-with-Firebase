@@ -16,7 +16,7 @@ import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
 import com.example.junemon.uploadfilteringimage_firebase.data.ProfileViewModel
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
-import com.example.junemon.uploadfilteringimage_firebase.ui.activity.MainActivity
+import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -81,7 +81,7 @@ class ProfileFragmentPresenter(
                     mView.onGetDataBack(username)
                 }
 
-                vm?.getFirebaseUser()?.observe(target, Observer {
+                vm?.getFirebaseUser()?.observe(target.viewLifecycleOwner, Observer {
                     if (it != null) {
                         userFromFirebase = UserModel(it.displayName, it.email)
                         mDatabaseReference.child(it.uid).setValue(userFromFirebase)

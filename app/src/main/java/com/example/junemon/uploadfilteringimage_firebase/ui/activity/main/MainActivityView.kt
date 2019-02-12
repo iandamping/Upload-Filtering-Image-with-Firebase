@@ -1,4 +1,4 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.activity
+package com.example.junemon.uploadfilteringimage_firebase.ui.activity.main
 
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseView
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel

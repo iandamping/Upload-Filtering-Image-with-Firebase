@@ -1,4 +1,4 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.filter
+package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter
 
 import android.content.Context
 import android.graphics.Bitmap

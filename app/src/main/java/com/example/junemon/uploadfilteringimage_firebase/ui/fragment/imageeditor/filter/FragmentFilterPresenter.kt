@@ -1,4 +1,4 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.filter
+package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -25,12 +25,15 @@ class FragmentFilterPresenter(var mView: FragmentFilterView) : BaseFragmentPrese
     private lateinit var utils: ImageUtils
     private lateinit var thumbnailListItem: MutableList<ThumbnailItem>
     private lateinit var compose: CompositeDisposable
+    private lateinit var listFilters: List<Filter>
 
     override fun onAttach(context: Context?) {
         this.ctx = context
         compose = CompositeDisposable()
         utils = ImageUtils(ctx)
         thumbnailListItem = arrayListOf()
+        listFilters = FilterPack.getFilterPack(ctx)
+
     }
 
     override fun onCreateView(view: View) {
@@ -62,7 +65,6 @@ class FragmentFilterPresenter(var mView: FragmentFilterView) : BaseFragmentPrese
                     ctx?.resources?.getString(R.string.filter_normal)
                 ThumbnailsManager.addThumb(thumbnailItem)
 
-                val listFilters: List<Filter> = FilterPack.getFilterPack(ctx)
                 for (filter in listFilters) {
                     val tI = ThumbnailItem()
                     tI.image = thumbImage
@@ -70,13 +72,6 @@ class FragmentFilterPresenter(var mView: FragmentFilterView) : BaseFragmentPrese
                     tI.filterName = filter.getName()
                     ThumbnailsManager.addThumb(tI)
                 }
-
-//                listFilters.forEach {
-//                    val ti = ThumbnailItem()
-//                    ti.image = thumbImage
-//                    ti.filterName = it.name
-//                    ThumbnailsManager.addThumb(ti)
-//                }
 
                 thumbnailListItem.addAll(ThumbnailsManager.processThumbs(ctx))
             }.run()

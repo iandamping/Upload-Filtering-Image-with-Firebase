@@ -1,4 +1,4 @@
-package com.example.junemon.uploadfilteringimage_firebase.ui.activity
+package com.example.junemon.uploadfilteringimage_firebase.ui.activity.main
 
 import android.app.Activity
 import android.content.Intent
@@ -10,14 +10,15 @@ import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Compani
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.sharedLoadDesiredFragment
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
+import com.example.junemon.uploadfilteringimage_firebase.ui.activity.upload.UploadActivity
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.chat.ChatFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home.HomeFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile.ProfileFragment
-import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.upload.UploadActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener, MainActivityView {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
+    MainActivityView {
     private lateinit var presenter: MainActivityPresenter
     private var userName: String? = null
 

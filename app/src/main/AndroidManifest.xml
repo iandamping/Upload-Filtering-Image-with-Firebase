@@ -18,7 +18,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".ui.activity.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -49,7 +49,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.fragment.upload.UploadActivity"
+        <activity android:name=".ui.activity.upload.UploadActivity"
                   android:screenOrientation="portrait"/>
 
 
