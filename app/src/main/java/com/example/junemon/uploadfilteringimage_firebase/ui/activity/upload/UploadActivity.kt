@@ -5,7 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
+import android.text.Editable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.IMAGE_NAME
@@ -27,6 +27,8 @@ import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter
 import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter
 import kotlinx.android.synthetic.main.content_main.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.yesButton
 
 class UploadActivity : AppCompatActivity(),
     UploadView, FragmentFilterListener, EditImageListener {
@@ -50,7 +52,7 @@ class UploadActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upload)
-        presenter = UploadPresenter(this, this, supportFragmentManager)
+        presenter = UploadPresenter(this, this)
         presenter.onCreate(this)
         presenter.getAllPermisions()
         BitmapUtils = ImageUtils(this)
@@ -131,8 +133,13 @@ class UploadActivity : AppCompatActivity(),
                     storageDatabaseReference,
                     mDatabaseReference, selectedUriForFirebase, name, comment
                 )
+                etPhotoComment.text = Editable.Factory.getInstance().newEditable("")
             } else {
-                Toast.makeText(this, "Pick image first", Toast.LENGTH_SHORT).show()
+                alert("Pick image first") {
+                    yesButton {
+                        it.dismiss()
+                    }
+                }
             }
         }
 

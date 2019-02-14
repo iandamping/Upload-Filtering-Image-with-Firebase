@@ -8,11 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mDatabaseReference
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mFirebaseAuth
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.userDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.HomeFragmentAdapter
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.yesButton
 
 class HomeFragment : Fragment(), HomeFragmentView {
     private lateinit var presenter: HomeFragmentPresenter
@@ -21,19 +25,20 @@ class HomeFragment : Fragment(), HomeFragmentView {
     private var userName: String? = null
     private var listAllData: MutableList<UploadImageModel> = mutableListOf()
 
-    fun newInstance(userName: String?): HomeFragment {
-        val bundle = Bundle()
-        val fragment = HomeFragment()
-        bundle.putString(userKeyPass, userName)
-        fragment.setArguments(bundle)
-        return fragment
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val args = arguments
-        userName = args?.getString(userKeyPass)
-    }
+//    fun newInstance(userName: String?): HomeFragment {
+//        val bundle = Bundle()
+//        val fragment = HomeFragment()
+//        bundle.putString(userKeyPass, userName)
+//        fragment.setArguments(bundle)
+//        return fragment
+//    }
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        val args = arguments
+//        userName = args?.getString(userKeyPass)
+//
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,6 +56,7 @@ class HomeFragment : Fragment(), HomeFragmentView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter.onGetDataback()
+        presenter.setAndGetDatauser(mFirebaseAuth.currentUser)
     }
 
     override fun onGetDataback(data: UploadImageModel?) {
@@ -58,7 +64,6 @@ class HomeFragment : Fragment(), HomeFragmentView {
         if (data != null) {
             listAllData.add(data)
             rvHomeFragment.adapter = HomeFragmentAdapter(ctx, listAllData) {
-
             }
         }
     }
@@ -69,5 +74,15 @@ class HomeFragment : Fragment(), HomeFragmentView {
 
     fun initiateSignOut() {
         presenter.onSignOutAndCleanUp()
+    }
+
+    override fun ongetDatauser(user: FirebaseUser?) {
+        if (user == null) {
+            ctx?.alert(ctx?.resources?.getString(R.string.login_failed)!!) {
+                yesButton {
+                    it.dismiss()
+                }
+            }?.show()
+        }
     }
 }

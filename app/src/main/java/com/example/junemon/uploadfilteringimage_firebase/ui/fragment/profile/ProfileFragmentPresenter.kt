@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -21,6 +20,8 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.yesButton
 
 class ProfileFragmentPresenter(
     var mDatabaseReference: DatabaseReference,
@@ -83,22 +84,21 @@ class ProfileFragmentPresenter(
 
                 vm?.getFirebaseUser()?.observe(target.viewLifecycleOwner, Observer {
                     if (it != null) {
+//                        it.photoUrl
                         userFromFirebase = UserModel(it.displayName, it.email)
                         mDatabaseReference.child(it.uid).setValue(userFromFirebase)
                         jsonModelToString = gson.toJson(userFromFirebase)
                         editor?.putString(KEY, jsonModelToString)
                         editor?.apply()
                         ctx?.startActivity(intentToMainActivity)
-                    } else {
-                        Toast.makeText(
-                            ctx,
-                            ctx?.resources?.getString(R.string.login_failed),
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 })
             } else {
-                Toast.makeText(ctx, ctx?.resources?.getString(R.string.login_failed), Toast.LENGTH_SHORT).show()
+                ctx?.alert(ctx?.resources?.getString(R.string.login_failed)!!) {
+                    yesButton {
+                        it.dismiss()
+                    }
+                }?.show()
             }
         }
     }

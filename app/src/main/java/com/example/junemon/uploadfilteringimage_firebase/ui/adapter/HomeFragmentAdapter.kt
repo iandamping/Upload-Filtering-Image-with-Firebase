@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mFirebaseAuth
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 import kotlinx.android.extensions.LayoutContainer
@@ -33,6 +34,10 @@ class HomeFragmentAdapter(
             tvFirebaseName.text = data.name
             tvFirebaseDesc.text = data.text
             ctx?.let { Glide.with(it).load(data.photoUrl).into(ivFirebaseImage) }
+            val user = mFirebaseAuth.currentUser
+            if (user!=null){
+                ctx?.let { Glide.with(it).load(user.photoUrl).into(ivFirebaseProfileImage) }
+            }
             itemView.setOnClickListener {
                 listener(data)
             }

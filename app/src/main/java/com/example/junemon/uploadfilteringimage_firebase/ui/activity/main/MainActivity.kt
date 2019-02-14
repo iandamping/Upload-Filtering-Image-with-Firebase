@@ -16,6 +16,8 @@ import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home.HomeFr
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.yesButton
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
     MainActivityView {
@@ -36,7 +38,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
             R.id.NavigationHome -> {
                 sharedLoadDesiredFragment(null, supportFragmentManager, HomeFragment())
-//                LoadChatFragmentWithValue(null, userName)
                 true
             }
             R.id.NavigationChat -> {
@@ -45,14 +46,16 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     i.putExtra("testing", userName)
                     startActivity(i)
                 } else {
-                    Toast.makeText(this, resources.getString(R.string.login_failed), Toast.LENGTH_SHORT).show()
+                    alert(resources.getString(R.string.login_failed)) {
+                        yesButton {
+                            it.dismiss()
+                        }
+                    }.show()
                 }
-//                sharedLoadDesiredFragment(null, supportFragmentManager, ChatFragment())
                 true
             }
             R.id.NavigationProfile -> {
-//                sharedLoadDesiredFragment(null, supportFragmentManager, ProfileFragment())
-                LoadProfileFragmentWithValue(null, userName)
+                sharedLoadDesiredFragment(null, supportFragmentManager, ProfileFragment().newInstance(userName))
                 true
             }
 
@@ -60,23 +63,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
     }
 
-    private fun LoadChatFragmentWithValue(savedInstanceState: Bundle?, username: String?) {
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.main_container, ChatFragment().newInstance(username))
-                .commit()
-        }
-    }
-
-    private fun LoadProfileFragmentWithValue(savedInstanceState: Bundle?, username: String?) {
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.main_container, ProfileFragment().newInstance(username))
-                .commit()
-        }
-    }
 
     private fun initBottomNav() {
         bottom_navigation.setOnNavigationItemSelectedListener(this)
@@ -101,7 +87,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onFailedGetDataBack(message: String?) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        alert(message.toString()) {
+            yesButton {
+                it.dismiss()
+            }
+        }
     }
 
     override fun initView() {

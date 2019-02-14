@@ -1,5 +1,6 @@
 package com.example.junemon.uploadfilteringimage_firebase
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.os.Bundle
@@ -13,6 +14,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.gson.Gson
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.progressDialog
 import java.io.File
 
 class MainApplication {
@@ -60,17 +63,7 @@ class MainApplication {
             }
         }
 
-//
-//        fun nonVoidCustomMediaScannerConnection(ctx: Context?, paths: String?): File {
-//            val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-//            val passingFile = File(directory, paths)
-//            MediaScannerConnection.scanFile(ctx, arrayOf(passingFile.toString()), null) { path, uri ->
-//                Log.i("ExternalStorage", "Scanned $path:")
-//                Log.i("ExternalStorage", "-> uri=$uri")
-//                cameraUri = uri
-//            }
-//            return passingFile
-//        }
+
 
         fun voidCustomMediaScannerConnection(ctx: Context?, paths: String?) {
             val directory = Environment.getExternalStorageDirectory()

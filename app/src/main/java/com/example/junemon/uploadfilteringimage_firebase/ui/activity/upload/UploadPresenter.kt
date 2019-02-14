@@ -9,38 +9,35 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestOpenCamera
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSelectGalleryImage
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveCaptureImagePath
 import com.example.junemon.uploadfilteringimage_firebase.base.BasePresenter
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainActivity
-import com.example.junemon.uploadfilteringimage_firebase.utils.DelayedProgressDialog
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.progressDialog
+import org.jetbrains.anko.yesButton
 import java.io.File
 
 
-class UploadPresenter(
-    private val target: FragmentActivity,
-    private val mView: UploadView,
-    private val fm: FragmentManager
-) :
-    BasePresenter {
+class UploadPresenter(private val target: FragmentActivity, private val mView: UploadView) : BasePresenter {
     private lateinit var ctx: Context
     private lateinit var utils: ImageUtils
     private lateinit var uploads: UploadImageModel
-    private lateinit var progressDialog: DelayedProgressDialog
+    private lateinit var intents: Intent
+    private lateinit var uploadTask: UploadTask
 
     override fun getContext(): Context? {
         return ctx
@@ -50,7 +47,7 @@ class UploadPresenter(
         ctx = context
         utils = ImageUtils(ctx)
         mView.initView()
-        progressDialog = DelayedProgressDialog()
+        intents = Intent()
     }
 
     override fun onStop() {
@@ -63,27 +60,33 @@ class UploadPresenter(
         username: String?,
         comment: String?
     ) {
-        //get last segment path from uri
         if (selectedImage != null) {
-            progressDialog.show(fm, "")
+            val dialogs = ctx.progressDialog(message = "Please wait a bit…", title = "Fetching data")
             val spaceRef = storageReference.child(selectedImage.lastPathSegment)
-            spaceRef.putFile(selectedImage).addOnSuccessListener {
+            uploadTask = spaceRef.putFile(selectedImage)
+            uploadTask.addOnProgressListener {
+                //adding progress listener to handle progressbar set progress
+                dialogs.show()
+                val progress = 100.0 * it.getBytesTransferred() / it.getTotalByteCount()
+                dialogs.progress = progress.toInt()
+            }.addOnSuccessListener {
                 spaceRef.downloadUrl.addOnSuccessListener {
                     //get the download url for image firebase storage
-                    val downUri = it
-                    uploads = UploadImageModel(comment, username, downUri.toString())
+                    val downloadedUri = it
+                    uploads = UploadImageModel(comment, username, downloadedUri.toString())
                     databaseReference.push().setValue(uploads).addOnCompleteListener {
                         //adding listener if it successfully upload progresdialog shutdown
                         if (it.isSuccessful) {
-                            progressDialog.cancel()
-                            val i: Intent = Intent(ctx, MainActivity::class.java)
-                            ctx.startActivity(i)
+                            intents.setClass(ctx, MainActivity::class.java)
+                            dialogs.dismiss()
+                            ctx.startActivity(intents)
                         }
                     }
                 }
             }
         }
     }
+
 
     fun getAllPermisions() {
         Dexter.withActivity(target).withPermissions(
@@ -109,16 +112,15 @@ class UploadPresenter(
     fun openImageFromGallery(status: Boolean?) {
         if (status != null) {
             if (status) {
-                val i = Intent(Intent.ACTION_PICK)
-                i.type = "image/*"
-                target.startActivityForResult(i, RequestSelectGalleryImage)
+                intents = Intent(Intent.ACTION_PICK)
+                intents.type = "image/*"
+                target.startActivityForResult(intents, RequestSelectGalleryImage)
             } else {
-                Toast.makeText(
-                    ctx,
-                    ctx.resources?.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.permisison_not_granted),
-                    Toast.LENGTH_SHORT
-                )
-                    .show();
+                ctx.alert(ctx.resources?.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.permisison_not_granted)!!) {
+                    yesButton {
+                        it.dismiss()
+                    }
+                }.show()
             }
         }
 
@@ -129,12 +131,11 @@ class UploadPresenter(
             if (status) {
                 utils.saveImage(views, bitmap)
             } else {
-                Toast.makeText(
-                    ctx,
-                    ctx.resources?.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.permisison_not_granted),
-                    Toast.LENGTH_SHORT
-                )
-                    .show();
+                ctx.alert(ctx.resources?.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.permisison_not_granted)!!) {
+                    yesButton {
+                        it.dismiss()
+                    }
+                }.show()
             }
         }
 
@@ -149,12 +150,12 @@ class UploadPresenter(
                     createImageFileFromPhoto()
                 )
 
-                val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                intents = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 //tell the camera where to save the image depending on your File set
-                i.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri)
+                intents.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri)
                 //tell the camera to request Write Permission
-                i.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                target.startActivityForResult(i, RequestOpenCamera)
+                intents.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                target.startActivityForResult(intents, RequestOpenCamera)
             }
         }
     }

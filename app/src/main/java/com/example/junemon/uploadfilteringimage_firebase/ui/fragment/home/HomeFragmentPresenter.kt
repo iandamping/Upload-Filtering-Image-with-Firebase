@@ -7,7 +7,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
 import com.example.junemon.uploadfilteringimage_firebase.data.HomeViewmodel
+import com.example.junemon.uploadfilteringimage_firebase.data.ProfileViewModel
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,13 +23,14 @@ class HomeFragmentPresenter(
 ) :
     BaseFragmentPresenter, ChildEventListener {
     private lateinit var uploadModel: UploadImageModel
+    private lateinit var profileVm: ProfileViewModel
     private lateinit var vm: HomeViewmodel
 
     override fun onAttach(context: Context?) {
         dataReference.addChildEventListener(this)
         uploadModel = UploadImageModel()
         vm = ViewModelProviders.of(target).get(HomeViewmodel::class.java)
-
+        profileVm = ViewModelProviders.of(target).get(ProfileViewModel::class.java)
     }
 
     override fun onCreateView(view: View) {
@@ -67,6 +70,13 @@ class HomeFragmentPresenter(
     fun onGetDataback() {
         vm.getImageData()?.observe(target.viewLifecycleOwner, Observer {
             mView.onGetDataback(it)
+        })
+    }
+
+    fun setAndGetDatauser(firebaseUser: FirebaseUser?) {
+        profileVm.setFirebaseUser(firebaseUser)
+        profileVm.getFirebaseUser()?.observe(target.viewLifecycleOwner, Observer {
+            mView.ongetDatauser(it)
         })
     }
 }
