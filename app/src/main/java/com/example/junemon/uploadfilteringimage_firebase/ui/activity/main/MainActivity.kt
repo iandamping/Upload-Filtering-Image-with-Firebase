@@ -11,7 +11,6 @@ import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Compani
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.activity.upload.UploadActivity
-import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.chat.ChatFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home.HomeFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -31,13 +30,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         presenter.onCreate(this)
         presenter.getUserData()
         initBottomNav()
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
 
             R.id.NavigationHome -> {
-                sharedLoadDesiredFragment(null, supportFragmentManager, HomeFragment())
+                sharedLoadDesiredFragment(null, supportFragmentManager, HomeFragment().newInstance(userName))
                 true
             }
             R.id.NavigationChat -> {
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private fun initBottomNav() {
         bottom_navigation.setOnNavigationItemSelectedListener(this)
-        supportFragmentManager.beginTransaction().replace(R.id.main_container, HomeFragment())
+        supportFragmentManager.beginTransaction().replace(R.id.main_container, HomeFragment().newInstance(userName))
             .commit()
     }
 

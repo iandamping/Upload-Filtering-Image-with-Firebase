@@ -35,7 +35,7 @@ class HomeFragmentAdapter(
             tvFirebaseDesc.text = data.text
             ctx?.let { Glide.with(it).load(data.photoUrl).into(ivFirebaseImage) }
             val user = mFirebaseAuth.currentUser
-            if (user!=null){
+            if (user != null) {
                 ctx?.let { Glide.with(it).load(user.photoUrl).into(ivFirebaseProfileImage) }
             }
             itemView.setOnClickListener {

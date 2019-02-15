@@ -139,7 +139,7 @@ class UploadActivity : AppCompatActivity(),
                     yesButton {
                         it.dismiss()
                     }
-                }
+                }.show()
             }
         }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UploadFilteringImage_Firebase</string>
+    <string name="app_name">FirebaseGram</string>
     <string name="home_nav">Home</string>
     <string name="upload_nav">Upload</string>
     <string name="profile_nav">Profile</string>
@@ -22,6 +22,8 @@
     <string name="tab_edit">EDIT</string>
 
     <string name="comment_hint">Whats on your mind</string>
+    <string name="uploading_image">Uploading your awesome image</string>
+    <string name="please_wait">Please wait a bit…</string>
 
 
     <string name="roboto_medium">sans-serif-medium</string>

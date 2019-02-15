@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentActivity
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestOpenCamera
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSelectGalleryImage
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveCaptureImagePath
+import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BasePresenter
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainActivity
@@ -61,7 +62,10 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
         comment: String?
     ) {
         if (selectedImage != null) {
-            val dialogs = ctx.progressDialog(message = "Please wait a bit…", title = "Fetching data")
+            val dialogs = ctx.progressDialog(
+                ctx.resources?.getString(R.string.please_wait),
+                ctx.resources?.getString(R.string.uploading_image)
+            )
             val spaceRef = storageReference.child(selectedImage.lastPathSegment)
             uploadTask = spaceRef.putFile(selectedImage)
             uploadTask.addOnProgressListener {
@@ -72,13 +76,13 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
             }.addOnSuccessListener {
                 spaceRef.downloadUrl.addOnSuccessListener {
                     //get the download url for image firebase storage
-                    val downloadedUri = it
-                    uploads = UploadImageModel(comment, username, downloadedUri.toString())
+                    uploads = UploadImageModel(comment, username, it.toString())
                     databaseReference.push().setValue(uploads).addOnCompleteListener {
                         //adding listener if it successfully upload progresdialog shutdown
                         if (it.isSuccessful) {
                             intents.setClass(ctx, MainActivity::class.java)
                             dialogs.dismiss()
+                            target.finish()
                             ctx.startActivity(intents)
                         }
                     }

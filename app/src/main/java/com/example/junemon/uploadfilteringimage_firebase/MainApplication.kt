@@ -15,7 +15,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.gson.Gson
 import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.progressDialog
 import java.io.File
 
 class MainApplication {
@@ -63,6 +62,12 @@ class MainApplication {
             }
         }
 
+        fun sharedProgressDialog(ctx: Context?, message: String, tittle: String): ProgressDialog? {
+            val dialog = ctx?.indeterminateProgressDialog(message, tittle) {
+
+            }
+            return dialog
+        }
 
 
         fun voidCustomMediaScannerConnection(ctx: Context?, paths: String?) {
