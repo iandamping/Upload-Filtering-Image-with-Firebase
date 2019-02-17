@@ -17,7 +17,7 @@ import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Compani
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BasePresenter
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
-import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainActivity
+import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainAppbarActivity
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
@@ -59,6 +59,7 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
         databaseReference: DatabaseReference,
         selectedImage: Uri?,
         username: String?,
+        userPhoto: String?,
         comment: String?
     ) {
         if (selectedImage != null) {
@@ -67,6 +68,7 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
                 ctx.resources?.getString(R.string.uploading_image)
             )
             val spaceRef = storageReference.child(selectedImage.lastPathSegment)
+//            val spaceRef = mFirebaseAuth.uid?.let { storageReference.child(it) }
             uploadTask = spaceRef.putFile(selectedImage)
             uploadTask.addOnProgressListener {
                 //adding progress listener to handle progressbar set progress
@@ -76,11 +78,12 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
             }.addOnSuccessListener {
                 spaceRef.downloadUrl.addOnSuccessListener {
                     //get the download url for image firebase storage
-                    uploads = UploadImageModel(comment, username, it.toString())
+                    uploads =
+                        UploadImageModel(comment, username, it.toString(), userPhoto, selectedImage.lastPathSegment)
                     databaseReference.push().setValue(uploads).addOnCompleteListener {
                         //adding listener if it successfully upload progresdialog shutdown
                         if (it.isSuccessful) {
-                            intents.setClass(ctx, MainActivity::class.java)
+                            intents.setClass(ctx, MainAppbarActivity::class.java)
                             dialogs.dismiss()
                             target.finish()
                             ctx.startActivity(intents)

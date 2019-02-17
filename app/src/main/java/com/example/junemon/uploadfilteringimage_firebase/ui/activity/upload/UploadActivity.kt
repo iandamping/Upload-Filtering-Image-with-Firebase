@@ -46,6 +46,7 @@ class UploadActivity : AppCompatActivity(),
     private var contrastFinal = 1.0f
     private var stat: Boolean? = null
     private var name: String? = null
+    private var userphoto: String? = null
     private var comment: String? = null
     private lateinit var BitmapUtils: ImageUtils
 
@@ -58,7 +59,8 @@ class UploadActivity : AppCompatActivity(),
         BitmapUtils = ImageUtils(this)
 
         loadImage()
-        name = intent.getStringExtra("testing")
+        name = intent.getStringExtra("userName")
+        userphoto = intent.getStringExtra("userPhoto")
         setupViewPager(viewpager)
         tabs.setupWithViewPager(viewpager)
 
@@ -131,7 +133,7 @@ class UploadActivity : AppCompatActivity(),
             if (selectedUriForFirebase != null) {
                 presenter.uploadImageToFirebase(
                     storageDatabaseReference,
-                    mDatabaseReference, selectedUriForFirebase, name, comment
+                    mDatabaseReference, selectedUriForFirebase, name, userphoto, comment
                 )
                 etPhotoComment.text = Editable.Factory.getInstance().newEditable("")
             } else {

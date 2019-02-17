@@ -21,7 +21,7 @@ class ChatFragmentPresenter(var dataReference: DatabaseReference, var mView: Cha
 
 
     fun sendUserMessage(message: String?, userName: String?) {
-        theContent = UploadImageModel(message, userName, null)
+        theContent = UploadImageModel(message, userName, null, null, null)
         dataReference.push().setValue(theContent)
     }
 }

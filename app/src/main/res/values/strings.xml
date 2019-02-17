@@ -23,6 +23,7 @@
 
     <string name="comment_hint">Whats on your mind</string>
     <string name="uploading_image">Uploading your awesome image</string>
+    <string name="downloading_image">Downloading your awesome image</string>
     <string name="please_wait">Please wait a bit…</string>
 
 

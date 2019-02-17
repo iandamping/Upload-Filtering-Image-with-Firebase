@@ -14,10 +14,13 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import androidx.core.content.FileProvider
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveFilterImagePath
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.voidCustomMediaScannerConnection
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.storage.StorageReference
+import org.jetbrains.anko.progressDialog
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -71,16 +74,41 @@ class ImageUtils(var ctx: Context?) {
             bitmap?.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
             outputStream.flush()
             outputStream.close()
-            openCamera(views, imageFile)
+            openImageFromSnackbar(views, imageFile)
         } catch (e: Throwable) {
             e.printStackTrace()
         }
         voidCustomMediaScannerConnection(ctx, saveFilterImagePath)
     }
 
-//    fun createImageFileFromPhoto(): File {
-//        return nonVoidCustomMediaScannerConnection(ctx, MainApplication.saveCaptureImagePath)
-//    }
+    fun saveFirebaseImageToGallery(storageReference: StorageReference, views: View, lastPathSegment: String?) {
+        val dialogs = ctx?.progressDialog(
+            ctx?.resources?.getString(R.string.please_wait),
+            ctx?.resources?.getString(R.string.downloading_image)
+        )
+        val spaceRef = lastPathSegment?.let { storageReference.child(it) }
+        val pictureDirectory = Environment.getExternalStorageDirectory()
+        val imageFile = File(pictureDirectory, MainApplication.saveFilterImagePath)
+        /*
+        kita memerlukan variable file agar menampung image dari firebase storage kita
+        perhatikan juga pada bagian storage refence nya kita memerlukan nama file / last path segment image kita agar tau
+        image mana yg akan di download
+         */
+        spaceRef?.getFile(imageFile)?.addOnProgressListener {
+            dialogs?.show()
+            val progress = 100.0 * it.getBytesTransferred() / it.getTotalByteCount()
+            dialogs?.progress = progress.toInt()
+        }?.addOnSuccessListener {
+            if (it.task.isSuccessful) {
+                MainApplication.voidCustomMediaScannerConnection(ctx, saveFilterImagePath)
+                dialogs?.dismiss()
+                openImageFromSnackbar(views, imageFile)
+            }
+        }?.addOnFailureListener {
+            Log.e("firebase ", ";local tem file not created  created $it");
+        }
+    }
+
 
     //decode File into Bitmap and compress it
     fun decodeSampledBitmapFromFile(imageFile: File, reqWidth: Int, reqHeight: Int): Bitmap {
@@ -112,7 +140,7 @@ class ImageUtils(var ctx: Context?) {
         return scaledBitmap
     }
 
-    private fun openCamera(views: View, imageFile: File) {
+    private fun openImageFromSnackbar(views: View, imageFile: File) {
         val snackbar = Snackbar
             .make(views, "Image saved to gallery!", Snackbar.LENGTH_LONG)
             .setAction("OPEN") {

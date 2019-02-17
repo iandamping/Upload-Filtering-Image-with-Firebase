@@ -73,7 +73,8 @@ class HomeFragment : Fragment(), HomeFragmentView {
         }
         if (data != null) {
             listAllData.add(data)
-            rvHomeFragment.adapter = HomeFragmentAdapter(ctx, listAllData) {
+            rvHomeFragment.adapter = HomeFragmentAdapter(ctx, listAllData, presenter) {
+
             }
         }
     }

@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
 import com.example.junemon.uploadfilteringimage_firebase.data.HomeViewmodel
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
+import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.storage.StorageReference
 
 class HomeFragmentPresenter(
     var dataReference: DatabaseReference,
@@ -21,19 +23,16 @@ class HomeFragmentPresenter(
 ) :
     BaseFragmentPresenter, ChildEventListener {
     private var ctx: Context? = null
+    private lateinit var utils: ImageUtils
     private lateinit var uploadModel: UploadImageModel
-    //    private lateinit var profileVm: ProfileViewModel
-    //        private var dialog: ProgressDialog? = null
     private lateinit var vm: HomeViewmodel
 
     override fun onAttach(context: Context?) {
         this.ctx = context
-//        dialog = sharedProgressDialog(ctx, "Please wait", "Awesome Photo")
-//        dialog?.show()
         dataReference.addChildEventListener(this)
         uploadModel = UploadImageModel()
+        utils = ImageUtils(ctx)
         vm = ViewModelProviders.of(target).get(HomeViewmodel::class.java)
-//        profileVm = ViewModelProviders.of(target).get(ProfileViewModel::class.java)
     }
 
     override fun onCreateView(view: View) {
@@ -78,11 +77,8 @@ class HomeFragmentPresenter(
         })
     }
 
-//    fun setAndGetDatauser(firebaseUser: FirebaseUser?) {
-//        profileVm.setFirebaseUser(firebaseUser)
-//        profileVm.getFirebaseUser()?.observe(target.viewLifecycleOwner, Observer {
-//            //            dialog?.dismiss()
-//            mView.ongetDatauser(it)
-//        })
-//    }
+    fun saveFirebaseImageToGallery(storageReference: StorageReference, views: View, lastPathSegment: String?) {
+        utils.saveFirebaseImageToGallery(storageReference, views, lastPathSegment)
+    }
+
 }

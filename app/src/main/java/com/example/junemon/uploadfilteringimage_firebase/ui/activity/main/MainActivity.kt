@@ -86,13 +86,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         userName = user?.name
     }
 
-    override fun onFailedGetDataBack(message: String?) {
-        alert(message.toString()) {
-            yesButton {
-                it.dismiss()
-            }
-        }
-    }
+//    override fun onFailedGetDataBack(message: String?) {
+//        alert(message.toString()) {
+//            yesButton {
+//                it.dismiss()
+//            }
+//        }.show()
+//    }
 
     override fun initView() {
     }

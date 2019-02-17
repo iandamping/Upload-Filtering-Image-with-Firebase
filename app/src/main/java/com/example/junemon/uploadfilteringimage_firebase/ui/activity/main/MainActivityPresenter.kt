@@ -25,6 +25,7 @@ class MainActivityPresenter(var mView: MainActivityView) : BasePresenter {
     override fun onCreate(context: Context) {
         this.ctx = context
         type = object : TypeToken<UserModel>() {}.type
+        mView.initView()
     }
 
     override fun onStop() {
@@ -38,7 +39,7 @@ class MainActivityPresenter(var mView: MainActivityView) : BasePresenter {
             userModelData = gson.fromJson(userData, type)
             mView.onGetDataBack(userModelData)
         } else {
-            mView.onFailedGetDataBack(ctx.resources?.getString(R.string.login_failed))
+//            mView.onFailedGetDataBack(ctx.resources?.getString(R.string.login_failed))
         }
     }
 

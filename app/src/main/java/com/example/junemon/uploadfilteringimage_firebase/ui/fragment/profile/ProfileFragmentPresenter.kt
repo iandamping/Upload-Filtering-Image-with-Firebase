@@ -15,7 +15,7 @@ import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
 import com.example.junemon.uploadfilteringimage_firebase.data.ProfileViewModel
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
-import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainActivity
+import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainAppbarActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -45,7 +45,7 @@ class ProfileFragmentPresenter(
         currentUser = mFirebaseAuth.currentUser
         pref = ctx?.applicationContext?.getSharedPreferences(prefToken, Context.MODE_PRIVATE)
         editor = pref?.edit()
-        intentToMainActivity = Intent(ctx, MainActivity::class.java)
+        intentToMainActivity = Intent(ctx, MainAppbarActivity::class.java)
         vm = ViewModelProviders.of(target).get(ProfileViewModel::class.java)
     }
 
@@ -85,7 +85,7 @@ class ProfileFragmentPresenter(
                 vm?.getFirebaseUser()?.observe(target.viewLifecycleOwner, Observer {
                     if (it != null) {
 //                        it.photoUrl
-                        userFromFirebase = UserModel(it.displayName, it.email)
+                        userFromFirebase = UserModel(it.displayName, it.email, it.photoUrl.toString())
                         mDatabaseReference.child(it.uid).setValue(userFromFirebase)
                         jsonModelToString = gson.toJson(userFromFirebase)
                         editor?.putString(KEY, jsonModelToString)
