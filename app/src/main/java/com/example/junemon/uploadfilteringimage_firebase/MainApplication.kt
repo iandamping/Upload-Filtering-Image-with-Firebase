@@ -1,6 +1,5 @@
 package com.example.junemon.uploadfilteringimage_firebase
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.os.Bundle
@@ -14,7 +13,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.gson.Gson
-import org.jetbrains.anko.indeterminateProgressDialog
 import java.io.File
 
 class MainApplication {
@@ -60,13 +58,6 @@ class MainApplication {
                     ?.replace(R.id.main_container, desiredFrag)
                     ?.commit()
             }
-        }
-
-        fun sharedProgressDialog(ctx: Context?, message: String, tittle: String): ProgressDialog? {
-            val dialog = ctx?.indeterminateProgressDialog(message, tittle) {
-
-            }
-            return dialog
         }
 
 

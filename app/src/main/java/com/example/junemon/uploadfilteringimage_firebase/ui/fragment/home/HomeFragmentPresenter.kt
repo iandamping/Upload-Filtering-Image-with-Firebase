@@ -81,4 +81,8 @@ class HomeFragmentPresenter(
         utils.saveFirebaseImageToGallery(storageReference, views, lastPathSegment)
     }
 
+    fun shareFirebaseImageThroughTelegram(lastPathSegment: String?) {
+        utils.shareFirebaseImageThroughTelegram(lastPathSegment)
+    }
+
 }

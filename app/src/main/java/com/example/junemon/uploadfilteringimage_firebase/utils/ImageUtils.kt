@@ -1,5 +1,6 @@
 package com.example.junemon.uploadfilteringimage_firebase.utils
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.res.AssetManager
@@ -13,6 +14,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveFilterImagePath
@@ -20,6 +22,7 @@ import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Compani
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.StorageReference
+import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.progressDialog
 import java.io.File
 import java.io.FileOutputStream
@@ -106,6 +109,38 @@ class ImageUtils(var ctx: Context?) {
             }
         }?.addOnFailureListener {
             Log.e("firebase ", ";local tem file not created  created $it");
+        }
+    }
+
+    fun shareFirebaseImageThroughTelegram(photoPathSegment: String?) {
+        val dialogs = ctx?.indeterminateProgressDialog(
+            ctx?.resources?.getString(R.string.please_wait),
+            ctx?.resources?.getString(R.string.processing_image)
+        )
+        val spaceRef = photoPathSegment?.let { MainApplication.storageDatabaseReference.child(it) }
+        val pictureDirectory = Environment.getExternalStorageDirectory()
+        val imageFile = File(pictureDirectory, saveFilterImagePath)
+        spaceRef?.getFile(imageFile)?.addOnSuccessListener {
+            dialogs?.show()
+            if (it.task.isSuccessful) {
+                dialogs?.dismiss()
+                spaceRef.downloadUrl.addOnSuccessListener {
+                    try {
+                        val telegramIntent = Intent(Intent.ACTION_SEND)
+                        telegramIntent.setType("image/*")
+                        val uri = FileProvider.getUriForFile(
+                            ctx!!,
+                            ctx!!.resources.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.package_name),
+                            imageFile
+                        )
+                        telegramIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                        telegramIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        ctx?.startActivity(Intent.createChooser(telegramIntent, "Choose app"))
+                    } catch (ex: ActivityNotFoundException) {
+                        Toast.makeText(ctx, "Telegram not installed", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
