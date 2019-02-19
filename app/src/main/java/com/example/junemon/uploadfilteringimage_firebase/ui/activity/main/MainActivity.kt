@@ -13,6 +13,7 @@ import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.activity.upload.UploadActivity
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home.HomeFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile.ProfileFragment
+import com.firebase.ui.auth.data.model.User
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
@@ -21,7 +22,7 @@ import org.jetbrains.anko.yesButton
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
     MainActivityView {
     private lateinit var presenter: MainActivityPresenter
-    private var userName: String? = null
+    private var userData: UserModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +38,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return when (item.itemId) {
 
             R.id.NavigationHome -> {
-                sharedLoadDesiredFragment(null, supportFragmentManager, HomeFragment().newInstance(userName))
+                sharedLoadDesiredFragment(null, supportFragmentManager, HomeFragment().newInstance(userData?.name))
                 true
             }
             R.id.NavigationChat -> {
-                if (userName != null) {
+                if (userData?.name != null) {
                     val i = Intent(this, UploadActivity::class.java)
-                    i.putExtra("testing", userName)
+                    i.putExtra("testing", userData?.name)
                     startActivity(i)
                 } else {
                     alert(resources.getString(R.string.login_failed)) {
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 true
             }
             R.id.NavigationProfile -> {
-                sharedLoadDesiredFragment(null, supportFragmentManager, ProfileFragment().newInstance(userName))
+                sharedLoadDesiredFragment(null, supportFragmentManager, ProfileFragment().newInstance(userData))
                 true
             }
 
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private fun initBottomNav() {
         bottom_navigation.setOnNavigationItemSelectedListener(this)
-        supportFragmentManager.beginTransaction().replace(R.id.main_container, HomeFragment().newInstance(userName))
+        supportFragmentManager.beginTransaction().replace(R.id.main_container, HomeFragment().newInstance(userData?.name))
             .commit()
     }
 
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onGetDataBack(user: UserModel?) {
-        userName = user?.name
+        userData = user
     }
 
 //    override fun onFailedGetDataBack(message: String?) {

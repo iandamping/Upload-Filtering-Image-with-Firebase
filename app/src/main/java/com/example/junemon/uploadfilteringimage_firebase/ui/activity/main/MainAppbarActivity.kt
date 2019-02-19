@@ -19,8 +19,8 @@ import org.jetbrains.anko.yesButton
 
 class MainAppbarActivity : AppCompatActivity(), MainActivityView {
     private lateinit var presenter: MainActivityPresenter
-    private var userName: String? = null
-    private var userPhotoUrl: String? = null
+    private var userData: UserModel? = null
+    private var userToken: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bottom_appbar)
@@ -44,7 +44,7 @@ class MainAppbarActivity : AppCompatActivity(), MainActivityView {
                 MainApplication.sharedLoadDesiredFragment(
                     null,
                     supportFragmentManager,
-                    HomeFragment().newInstance(userName)
+                    HomeFragment().newInstance(userData?.name)
                 )
                 true
             }
@@ -52,7 +52,7 @@ class MainAppbarActivity : AppCompatActivity(), MainActivityView {
                 MainApplication.sharedLoadDesiredFragment(
                     null,
                     supportFragmentManager,
-                    ProfileFragment().newInstance(userName)
+                    ProfileFragment().newInstance(userData)
                 )
                 true
             }
@@ -74,44 +74,18 @@ class MainAppbarActivity : AppCompatActivity(), MainActivityView {
     }
 
     override fun onGetDataBack(user: UserModel?) {
-        userName = user?.name
-        userPhotoUrl = user?.userPhotoUrl
+        if (user != null) {
+            userData = user
+            userData?.userToken = userToken
+        }
     }
 
-    //this variable works to changeFabAlignment in bottomappbar
-//    private fun BottomAppBar.setFabAlignmentInBottomAppBar() {
-//        currentFabAlignmentMode = fabAlignmentMode
-//        fabAlignmentMode = currentFabAlignmentMode.xor(1)
-//    }
-
     override fun initView() {
-//        fabVisibiltyListener = object : FloatingActionButton.OnVisibilityChangedListener() {
-//            override fun onShown(fab: FloatingActionButton?) {
-//                super.onShown(fab)
-//            }
-//
-//            override fun onHidden(fab: FloatingActionButton?) {
-//                super.onHidden(fab)
-//                btmAppBar.setFabAlignmentInBottomAppBar()
-//                btmAppBar.replaceMenu(
-//                    if (currentFabAlignmentMode == BottomAppBar.FAB_ALIGNMENT_MODE_CENTER) {
-//                        R.menu.secondary_appbar_menu
-//                    } else R.menu.main_appbar_menu
-//                )
-//                fab?.setImageDrawable(
-//                    if (currentFabAlignmentMode == BottomAppBar.FAB_ALIGNMENT_MODE_CENTER) {
-//                        getDrawable(R.drawable.ic_share_white_24dp)
-//                    } else getDrawable(R.drawable.ic_add_white_24dp)
-//                )
-//            }
-//        }
-
-
         fabAppBar.setOnClickListener {
-            if (userName != null) {
+            if (userData?.name != null) {
                 val i = Intent(this, UploadActivity::class.java)
-                i.putExtra("userName", userName)
-                i.putExtra("userPhoto", userPhotoUrl)
+                i.putExtra("userName", userData?.name)
+                i.putExtra("userPhoto", userData?.userPhotoUrl)
                 startActivity(i)
             } else {
                 alert(resources.getString(R.string.login_failed)) {
@@ -124,9 +98,9 @@ class MainAppbarActivity : AppCompatActivity(), MainActivityView {
     }
 
     private fun initBottomNav() {
-        supportFragmentManager.beginTransaction().replace(R.id.main_container, HomeFragment().newInstance(userName))
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container, HomeFragment().newInstance(userData?.name))
             .commit()
     }
-
 
 }

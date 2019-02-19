@@ -19,7 +19,7 @@
         <ImageView
                 android:id="@+id/ivImagePreview"
                 android:layout_width="match_parent"
-                android:src="@drawable/ic_home_black_24dp"
+                android:src="@drawable/ic_home_white_24dp"
                 android:layout_height="360dp"
                 android:scaleType="centerCrop"/>
 

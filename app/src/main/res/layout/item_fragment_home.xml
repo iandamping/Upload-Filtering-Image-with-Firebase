@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/ic_person_black_24dp"
+                tools:src="@drawable/ic_person_white_24dp"
                 android:id="@+id/ivFirebaseImage"/>
 
         <LinearLayout

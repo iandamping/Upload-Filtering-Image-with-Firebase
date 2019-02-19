@@ -4,7 +4,7 @@
 
     <item
             android:id="@+id/NavigationHome"
-            android:icon="@drawable/ic_home_black_24dp"
+            android:icon="@drawable/ic_home_white_24dp"
             android:title="@string/home_nav"
             app:showAsAction="ifRoom" />
 
@@ -16,7 +16,7 @@
 
     <item
             android:id="@+id/NavigationProfile"
-            android:icon="@drawable/ic_person_black_24dp"
+            android:icon="@drawable/ic_person_white_24dp"
             android:title="@string/profile_nav"
             app:showAsAction="ifRoom" />
 

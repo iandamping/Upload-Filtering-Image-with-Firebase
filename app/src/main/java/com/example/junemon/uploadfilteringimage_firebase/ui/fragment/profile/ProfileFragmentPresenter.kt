@@ -7,6 +7,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.KEY
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.gson
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mFirebaseAuth
@@ -32,16 +33,17 @@ class ProfileFragmentPresenter(
     private var ctx: Context? = null
     private lateinit var listener: FirebaseAuth.AuthStateListener
     private lateinit var userFromFirebase: UserModel
+    private lateinit var intentToMainActivity: Intent
     private var jsonModelToString: String? = null
     private var currentUser: FirebaseUser? = null
     private var pref: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null
     private var vm: ProfileViewModel? = null
-    private lateinit var intentToMainActivity: Intent
-
+    private var userToken:String? = null
 
     override fun onAttach(context: Context?) {
         this.ctx = context
+        userPrivateToken()
         currentUser = mFirebaseAuth.currentUser
         pref = ctx?.applicationContext?.getSharedPreferences(prefToken, Context.MODE_PRIVATE)
         editor = pref?.edit()
@@ -73,19 +75,18 @@ class ProfileFragmentPresenter(
         ctx?.startActivity(intentToMainActivity)
     }
 
-    fun getUserData(username: String?) {
+    fun getUserData(users:UserModel?) {
         listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             if (firebaseAuth != null) {
-                if (username.isNullOrEmpty()) {
+                if (users?.name.isNullOrEmpty()) {
                     vm?.setFirebaseUser(firebaseAuth.currentUser)
                 } else {
-                    mView.onGetDataBack(username)
+                    mView.onGetDataBack(users?.name)
                 }
 
                 vm?.getFirebaseUser()?.observe(target.viewLifecycleOwner, Observer {
                     if (it != null) {
-//                        it.photoUrl
-                        userFromFirebase = UserModel(it.displayName, it.email, it.photoUrl.toString())
+                        userFromFirebase = UserModel(it.displayName, it.email, it.photoUrl.toString(),userToken,it.phoneNumber)
                         mDatabaseReference.child(it.uid).setValue(userFromFirebase)
                         jsonModelToString = gson.toJson(userFromFirebase)
                         editor?.putString(KEY, jsonModelToString)
@@ -100,6 +101,12 @@ class ProfileFragmentPresenter(
                     }
                 }?.show()
             }
+        }
+    }
+
+    private fun userPrivateToken() {
+        MainApplication.mFirebaseInstanceId.instanceId.addOnSuccessListener {
+            userToken = it.token
         }
     }
 
