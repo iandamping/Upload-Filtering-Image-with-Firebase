@@ -8,12 +8,7 @@ import android.os.Bundle
 import android.text.Editable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.IMAGE_NAME
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestOpenCamera
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSelectGalleryImage
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mDatabaseReference
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.maxHeight
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.maxWidth
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.storageDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.imagefilteradapter.ViewPagerAdapter
@@ -21,6 +16,11 @@ import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.edit.EditImageListener
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter.FragmentFilterList
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter.FragmentFilterListener
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.IMAGE_NAME
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestOpenCamera
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestSelectGalleryImage
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.maxHeight
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.maxWidth
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.zomato.photofilters.imageprocessors.Filter
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter

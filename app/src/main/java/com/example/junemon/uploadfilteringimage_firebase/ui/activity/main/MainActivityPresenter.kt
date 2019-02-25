@@ -1,11 +1,8 @@
 package com.example.junemon.uploadfilteringimage_firebase.ui.activity.main
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.KEY
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.gson
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.prefToken
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.prefHelper
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BasePresenter
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
@@ -13,11 +10,10 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 class MainActivityPresenter(var mView: MainActivityView) : BasePresenter {
-    //    private lateinit var gson: Gson
     private lateinit var ctx: Context
     private lateinit var type: Type
-    private lateinit var preferences: SharedPreferences
     private lateinit var userModelData: UserModel
+
     override fun getContext(): Context? {
         return ctx
     }
@@ -33,8 +29,7 @@ class MainActivityPresenter(var mView: MainActivityView) : BasePresenter {
 
 
     fun getUserData() {
-        preferences = ctx.getSharedPreferences(prefToken, MODE_PRIVATE)
-        val userData = preferences.getString(KEY, ctx.resources?.getString(R.string.user_logout))
+        val userData = prefHelper.getUserLoginState()
         if (!userData.equals(ctx.resources?.getString(R.string.user_logout), ignoreCase = true)) {
             userModelData = gson.fromJson(userData, type)
             mView.onGetDataBack(userModelData)

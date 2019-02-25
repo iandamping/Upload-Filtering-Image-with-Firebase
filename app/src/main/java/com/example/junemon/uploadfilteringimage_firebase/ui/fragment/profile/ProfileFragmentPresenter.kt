@@ -2,16 +2,14 @@ package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.KEY
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.gson
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mFirebaseAuth
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.prefToken
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.prefHelper
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
 import com.example.junemon.uploadfilteringimage_firebase.data.ProfileViewModel
@@ -25,9 +23,9 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton
 
 class ProfileFragmentPresenter(
-    var mDatabaseReference: DatabaseReference,
-    var mView: ProfileFragmentView,
-    var target: Fragment
+        var mDatabaseReference: DatabaseReference,
+        var mView: ProfileFragmentView,
+        var target: Fragment
 ) : BaseFragmentPresenter {
 
     private var ctx: Context? = null
@@ -36,17 +34,13 @@ class ProfileFragmentPresenter(
     private lateinit var intentToMainActivity: Intent
     private var jsonModelToString: String? = null
     private var currentUser: FirebaseUser? = null
-    private var pref: SharedPreferences? = null
-    private var editor: SharedPreferences.Editor? = null
     private var vm: ProfileViewModel? = null
-    private var userToken:String? = null
+    private var userToken: String? = null
 
     override fun onAttach(context: Context?) {
         this.ctx = context
         userPrivateToken()
         currentUser = mFirebaseAuth.currentUser
-        pref = ctx?.applicationContext?.getSharedPreferences(prefToken, Context.MODE_PRIVATE)
-        editor = pref?.edit()
         intentToMainActivity = Intent(ctx, MainAppbarActivity::class.java)
         vm = ViewModelProviders.of(target).get(ProfileViewModel::class.java)
     }
@@ -70,12 +64,11 @@ class ProfileFragmentPresenter(
 
     fun setLogoutData() {
         ctx?.let { AuthUI.getInstance().signOut(it) }
-        editor?.putString(KEY, ctx?.resources?.getString(R.string.user_logout))
-        editor?.apply()
+        prefHelper.setUserLoginState(ctx?.resources?.getString(R.string.user_logout))
         ctx?.startActivity(intentToMainActivity)
     }
 
-    fun getUserData(users:UserModel?) {
+    fun getUserData(users: UserModel?) {
         listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             if (firebaseAuth != null) {
                 if (users?.name.isNullOrEmpty()) {
@@ -86,11 +79,11 @@ class ProfileFragmentPresenter(
 
                 vm?.getFirebaseUser()?.observe(target.viewLifecycleOwner, Observer {
                     if (it != null) {
-                        userFromFirebase = UserModel(it.displayName, it.email, it.photoUrl.toString(),userToken,it.phoneNumber)
+                        userFromFirebase =
+                                UserModel(it.displayName, it.email, it.photoUrl.toString(), userToken, it.phoneNumber)
                         mDatabaseReference.child(it.uid).setValue(userFromFirebase)
                         jsonModelToString = gson.toJson(userFromFirebase)
-                        editor?.putString(KEY, jsonModelToString)
-                        editor?.apply()
+                        prefHelper.setUserLoginState(jsonModelToString)
                         ctx?.startActivity(intentToMainActivity)
                     }
                 })

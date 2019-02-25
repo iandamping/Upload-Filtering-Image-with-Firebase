@@ -17,9 +17,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveFilterImagePath
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.voidCustomMediaScannerConnection
 import com.example.junemon.uploadfilteringimage_firebase.R
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.saveFilterImagePath
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.StorageReference
 import org.jetbrains.anko.indeterminateProgressDialog
@@ -86,12 +86,12 @@ class ImageUtils(var ctx: Context?) {
 
     fun saveFirebaseImageToGallery(storageReference: StorageReference, views: View, lastPathSegment: String?) {
         val dialogs = ctx?.progressDialog(
-            ctx?.resources?.getString(R.string.please_wait),
-            ctx?.resources?.getString(R.string.downloading_image)
+                ctx?.resources?.getString(R.string.please_wait),
+                ctx?.resources?.getString(R.string.downloading_image)
         )
         val spaceRef = lastPathSegment?.let { storageReference.child(it) }
         val pictureDirectory = Environment.getExternalStorageDirectory()
-        val imageFile = File(pictureDirectory, MainApplication.saveFilterImagePath)
+        val imageFile = File(pictureDirectory, saveFilterImagePath)
         /*
         kita memerlukan variable file agar menampung image dari firebase storage kita
         perhatikan juga pada bagian storage refence nya kita memerlukan nama file / last path segment image kita agar tau
@@ -114,8 +114,8 @@ class ImageUtils(var ctx: Context?) {
 
     fun shareFirebaseImageThroughTelegram(photoPathSegment: String?) {
         val dialogs = ctx?.indeterminateProgressDialog(
-            ctx?.resources?.getString(R.string.please_wait),
-            ctx?.resources?.getString(R.string.processing_image)
+                ctx?.resources?.getString(R.string.please_wait),
+                ctx?.resources?.getString(R.string.processing_image)
         )
         val spaceRef = photoPathSegment?.let { MainApplication.storageDatabaseReference.child(it) }
         val pictureDirectory = Environment.getExternalStorageDirectory()
@@ -129,9 +129,9 @@ class ImageUtils(var ctx: Context?) {
                         val telegramIntent = Intent(Intent.ACTION_SEND)
                         telegramIntent.setType("image/*")
                         val uri = FileProvider.getUriForFile(
-                            ctx!!,
-                            ctx!!.resources.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.package_name),
-                            imageFile
+                                ctx!!,
+                                ctx!!.resources.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.package_name),
+                                imageFile
                         )
                         telegramIntent.putExtra(Intent.EXTRA_STREAM, uri)
                         telegramIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -177,15 +177,15 @@ class ImageUtils(var ctx: Context?) {
 
     private fun openImageFromSnackbar(views: View, imageFile: File) {
         val snackbar = Snackbar
-            .make(views, "Image saved to gallery!", Snackbar.LENGTH_LONG)
-            .setAction("OPEN") {
-                val i = Intent(Intent.ACTION_VIEW)
-                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                val uri =
-                    FileProvider.getUriForFile(ctx!!, ctx!!.resources.getString(R.string.package_name), imageFile)
-                i.setDataAndType(uri, "image/*")
-                ctx?.startActivity(i)
-            }
+                .make(views, "Image saved to gallery!", Snackbar.LENGTH_LONG)
+                .setAction("OPEN") {
+                    val i = Intent(Intent.ACTION_VIEW)
+                    i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    val uri =
+                            FileProvider.getUriForFile(ctx!!, ctx!!.resources.getString(R.string.package_name), imageFile)
+                    i.setDataAndType(uri, "image/*")
+                    ctx?.startActivity(i)
+                }
         snackbar.show()
     }
 

@@ -11,13 +11,13 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestOpenCamera
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSelectGalleryImage
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.saveCaptureImagePath
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BasePresenter
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainAppbarActivity
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestOpenCamera
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestSelectGalleryImage
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.saveCaptureImagePath
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
@@ -55,17 +55,17 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
     }
 
     fun uploadImageToFirebase(
-        storageReference: StorageReference,
-        databaseReference: DatabaseReference,
-        selectedImage: Uri?,
-        username: String?,
-        userPhoto: String?,
-        comment: String?
+            storageReference: StorageReference,
+            databaseReference: DatabaseReference,
+            selectedImage: Uri?,
+            username: String?,
+            userPhoto: String?,
+            comment: String?
     ) {
         if (selectedImage != null) {
             val dialogs = ctx.progressDialog(
-                ctx.resources?.getString(R.string.please_wait),
-                ctx.resources?.getString(R.string.uploading_image)
+                    ctx.resources?.getString(R.string.please_wait),
+                    ctx.resources?.getString(R.string.uploading_image)
             )
             val spaceRef = storageReference.child(selectedImage.lastPathSegment)
 //            val spaceRef = mFirebaseAuth.uid?.let { storageReference.child(it) }
@@ -79,7 +79,7 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
                 spaceRef.downloadUrl.addOnSuccessListener {
                     //get the download url for image firebase storage
                     uploads =
-                        UploadImageModel(comment, username, it.toString(), userPhoto, selectedImage.lastPathSegment)
+                            UploadImageModel(comment, username, it.toString(), userPhoto, selectedImage.lastPathSegment)
                     databaseReference.push().setValue(uploads).addOnCompleteListener {
                         //adding listener if it successfully upload progresdialog shutdown
                         if (it.isSuccessful) {
@@ -97,9 +97,9 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
 
     fun getAllPermisions() {
         Dexter.withActivity(target).withPermissions(
-            android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            android.Manifest.permission.CAMERA
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA
         ).withListener(object : MultiplePermissionsListener {
             override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                 if (report?.areAllPermissionsGranted()!!) {
@@ -108,8 +108,8 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
             }
 
             override fun onPermissionRationaleShouldBeShown(
-                permissions: MutableList<PermissionRequest>?,
-                token: PermissionToken?
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
             ) {
             }
 
@@ -152,9 +152,9 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
         if (status != null) {
             if (status) {
                 val pictureUri: Uri = FileProvider.getUriForFile(
-                    ctx,
-                    ctx.resources.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.package_name),
-                    createImageFileFromPhoto()
+                        ctx,
+                        ctx.resources.getString(com.example.junemon.uploadfilteringimage_firebase.R.string.package_name),
+                        createImageFileFromPhoto()
                 )
 
                 intents = Intent(MediaStore.ACTION_IMAGE_CAPTURE)

@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSignIn
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.userDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestSignIn
 import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
@@ -19,18 +18,18 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 class ProfileFragment : Fragment(), ProfileFragmentView {
     private var ctx: Context? = null
     private val userKeyPass = "asdwafas"
-    private var userData:UserModel? = UserModel()
+    private var userData: UserModel? = UserModel()
     private lateinit var presenter: ProfileFragmentPresenter
     private val loginProvider = arrayListOf(
-        AuthUI.IdpConfig.FacebookBuilder().build(),
-        AuthUI.IdpConfig.GoogleBuilder().build()
+            AuthUI.IdpConfig.FacebookBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build()
     )
 
 
     fun newInstance(users: UserModel?): ProfileFragment {
         val bundle = Bundle()
         val fragment = ProfileFragment()
-        bundle.putParcelable(userKeyPass,users)
+        bundle.putParcelable(userKeyPass, users)
         fragment.setArguments(bundle)
         return fragment
     }
@@ -84,12 +83,12 @@ class ProfileFragment : Fragment(), ProfileFragmentView {
 
     private fun createSignInIntent() {
         startActivityForResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setIsSmartLockEnabled(false)
-                .setAvailableProviders(loginProvider)
-                .build(),
-            RequestSignIn
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)
+                        .setAvailableProviders(loginProvider)
+                        .build(),
+                RequestSignIn
         )
     }
 

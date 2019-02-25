@@ -6,21 +6,20 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.RequestSignIn
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.sharedLoadDesiredFragment
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.activity.upload.UploadActivity
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home.HomeFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile.ProfileFragment
-import com.firebase.ui.auth.data.model.User
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestSignIn
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-    MainActivityView {
+        MainActivityView {
     private lateinit var presenter: MainActivityPresenter
     private var userData: UserModel? = null
 
@@ -68,7 +67,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private fun initBottomNav() {
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         supportFragmentManager.beginTransaction().replace(R.id.main_container, HomeFragment().newInstance(userData?.name))
-            .commit()
+                .commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -13,6 +13,7 @@ import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.activity.upload.UploadActivity
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home.HomeFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile.ProfileFragment
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestSignIn
 import kotlinx.android.synthetic.main.activity_bottom_appbar.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton
@@ -42,17 +43,17 @@ class MainAppbarActivity : AppCompatActivity(), MainActivityView {
         return when (item?.itemId) {
             R.id.NavigationHome -> {
                 MainApplication.sharedLoadDesiredFragment(
-                    null,
-                    supportFragmentManager,
-                    HomeFragment().newInstance(userData?.name)
+                        null,
+                        supportFragmentManager,
+                        HomeFragment().newInstance(userData?.name)
                 )
                 true
             }
             R.id.NavigationProfile -> {
                 MainApplication.sharedLoadDesiredFragment(
-                    null,
-                    supportFragmentManager,
-                    ProfileFragment().newInstance(userData)
+                        null,
+                        supportFragmentManager,
+                        ProfileFragment().newInstance(userData)
                 )
                 true
             }
@@ -63,7 +64,7 @@ class MainAppbarActivity : AppCompatActivity(), MainActivityView {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MainApplication.RequestSignIn) {
+        if (requestCode == RequestSignIn) {
             if (resultCode == Activity.RESULT_OK) {
 //                sharedLoadDesiredFragment(null, supportFragmentManager, ProfileFragment())
             } else if (resultCode == RESULT_CANCELED) {
@@ -99,8 +100,8 @@ class MainAppbarActivity : AppCompatActivity(), MainActivityView {
 
     private fun initBottomNav() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, HomeFragment().newInstance(userData?.name))
-            .commit()
+                .replace(R.id.main_container, HomeFragment().newInstance(userData?.name))
+                .commit()
     }
 
 }

@@ -3,9 +3,9 @@ package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageedito
 import android.content.Context
 import android.graphics.Bitmap
 import android.view.View
-import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.IMAGE_NAME
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.IMAGE_NAME
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
 import com.zomato.photofilters.FilterPack
 import com.zomato.photofilters.imageprocessors.Filter
@@ -62,7 +62,7 @@ class FragmentFilterPresenter(var mView: FragmentFilterView) : BaseFragmentPrese
                 val thumbnailItem = ThumbnailItem()
                 thumbnailItem.image = thumbImage
                 thumbnailItem.filterName =
-                    ctx?.resources?.getString(R.string.filter_normal)
+                        ctx?.resources?.getString(R.string.filter_normal)
                 ThumbnailsManager.addThumb(thumbnailItem)
 
                 for (filter in listFilters) {
