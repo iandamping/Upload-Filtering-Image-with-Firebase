@@ -27,19 +27,19 @@ class ManuallyNotification {
             notif.createNotificationChannel(channel)
         }
         val builder = NotificationCompat.Builder(context, OREO_NOTIF_CHANEL_ID)
-            .setColor(
-                ContextCompat.getColor(
-                    context,
-                    com.example.junemon.uploadfilteringimage_firebase.R.color.colorPrimary
+                .setColor(
+                        ContextCompat.getColor(
+                                context,
+                                com.example.junemon.uploadfilteringimage_firebase.R.color.colorPrimary
+                        )
                 )
-            )
-            .setContentTitle("Hai ! ${contentTitle} okaay ?")
+                .setContentTitle("Hai ! ${contentTitle} okaay ?")
 //                .setSmallIcon(R.drawable.ic_cofee_bean)
-            .setFullScreenIntent(contentIntent(context), true)
-            .setContentText(messageBody)
-            .setDefaults(Notification.DEFAULT_VIBRATE)
-            .setContentIntent(contentIntent(context))  //ini pendingIntent
-            .setAutoCancel(true)  //notif akan hilang setelah di klik
+                .setFullScreenIntent(contentIntent(context), true)
+                .setContentText(messageBody)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentIntent(contentIntent(context))  //ini pendingIntent
+                .setAutoCancel(true)  //notif akan hilang setelah di klik
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             builder.priority = NotificationCompat.PRIORITY_HIGH

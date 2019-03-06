@@ -7,7 +7,7 @@ import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
 import com.google.firebase.database.DatabaseReference
 
 class ChatFragmentPresenter(var dataReference: DatabaseReference, var mView: ChatFragmentView) :
-    BaseFragmentPresenter {
+        BaseFragmentPresenter {
     private var ctx: Context? = null
     private lateinit var theContent: UploadImageModel
 

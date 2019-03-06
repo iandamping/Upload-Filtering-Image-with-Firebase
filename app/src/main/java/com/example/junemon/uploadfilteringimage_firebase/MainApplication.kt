@@ -8,6 +8,8 @@ import android.os.Environment
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.example.junemon.uploadfilteringimage_firebase.api.ApiClient
+import com.example.junemon.uploadfilteringimage_firebase.api.ApiInterface
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.uploadNodePhotos
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.uploadNodeUser
 import com.example.junemon.uploadfilteringimage_firebase.utils.PreferenceHelper
@@ -31,9 +33,13 @@ class MainApplication : Application() {
         lateinit var mFirebaseAuth: FirebaseAuth
         lateinit var mFirebaseStorage: FirebaseStorage
         lateinit var mFirebaseInstanceId: FirebaseInstanceId
+        lateinit var sentNotificationFirebase: ApiInterface
 
-
-        fun sharedLoadDesiredFragment(savedInstanceState: Bundle?, fragmentManager: FragmentManager?, desiredFrag: Fragment) {
+        fun sharedLoadDesiredFragment(
+                savedInstanceState: Bundle?,
+                fragmentManager: FragmentManager?,
+                desiredFrag: Fragment
+        ) {
             if (savedInstanceState == null) {
                 fragmentManager
                         ?.beginTransaction()
@@ -56,8 +62,11 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        sentNotificationFirebase = ApiClient().createRequest(this)
+
         prefHelper = PreferenceHelper(this)
-        prefHelper.setUserLoginState("Logged out")
+//        prefHelper.setUserLoginState("Logged out")
+
         mFirebaseDatabase = FirebaseDatabase.getInstance()
         mFirebaseAuth = FirebaseAuth.getInstance()
         mFirebaseStorage = FirebaseStorage.getInstance()

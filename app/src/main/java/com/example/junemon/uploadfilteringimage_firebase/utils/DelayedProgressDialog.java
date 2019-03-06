@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.widget.ProgressBar;
+
+import com.example.junemon.uploadfilteringimage_firebase.R;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import com.example.junemon.uploadfilteringimage_firebase.R;
 
 public class DelayedProgressDialog extends DialogFragment {
     private static final int DELAY_MILLISECOND = 450;

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 
 class ChatReceiveViewholder(override val containerView: View, var ctx: Context?) :
-    RecyclerView.ViewHolder(containerView), LayoutContainer {
+        RecyclerView.ViewHolder(containerView), LayoutContainer {
 //    fun bindViews(chat: SentMessageModel, listener: (SentMessageModel) -> Unit) {
 //        tvMessageReceive.text = chat.text
 //    }

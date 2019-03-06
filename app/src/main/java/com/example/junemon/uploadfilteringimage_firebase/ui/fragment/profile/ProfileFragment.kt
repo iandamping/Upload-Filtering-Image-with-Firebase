@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.userDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestSignIn
+import com.example.junemon.uploadfilteringimage_firebase.utils.inflates
+import com.example.junemon.uploadfilteringimage_firebase.utils.loadUrl
+import com.example.junemon.uploadfilteringimage_firebase.utils.visible
 import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
@@ -53,24 +55,27 @@ class ProfileFragment : Fragment(), ProfileFragmentView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val views: View = inflater.inflate(R.layout.fragment_profile, container, false)
-        presenter.onCreateView(views)
+//        val views: View = inflater.inflate(R.layout.fragment_profile, container, false)
+        val views = container?.inflates(R.layout.fragment_profile)
+        views?.let {
+            presenter.onCreateView(it)
+        }
         return views
     }
 
     override fun initView(view: View) {
-        ctx?.let { Glide.with(it).load(userData?.userPhotoUrl).into(view.tvPhotoProfileUser) }
+        view.ivPhotoProfileUser.loadUrl(userData?.userPhotoUrl)
+//        ctx?.let { Glide.with(it).load(userData?.userPhotoUrl).into(view.tvPhotoProfileUser) }
         view.tvProfileName.text = userData?.name
         view.tvProfileEmail.text = userData?.email
         view.tvProfilePhoneNumber.text = userData?.phoneNumber ?: "-"
 
         if (userData?.name.isNullOrEmpty()) {
-            view.btnLogin.visibility = View.VISIBLE
+            view.btnLogin.visible()
         } else {
-            view.btnLogout.visibility = View.VISIBLE
-            view.llProfile.visibility = View.VISIBLE
+            view.btnLogout.visible()
+            view.llProfile.visible()
         }
-
 
         view.btnLogin.setOnClickListener {
             createSignInIntent()

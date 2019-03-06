@@ -10,9 +10,9 @@ import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.viewholder.C
 import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.viewholder.ChatSentViewholder
 
 class ChatAdapter(
-    val ctx: Context?,
-    var listMessage: List<UploadImageModel>,
-    val listener: (UploadImageModel) -> Unit
+        val ctx: Context?,
+        var listMessage: List<UploadImageModel>,
+        val listener: (UploadImageModel) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val receive = 1
     private val sent = 2

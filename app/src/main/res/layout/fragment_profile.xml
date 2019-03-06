@@ -8,7 +8,7 @@
     <com.mikhaellopez.circularimageview.CircularImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:id="@+id/tvPhotoProfileUser"
+            android:id="@+id/ivPhotoProfileUser"
             android:scaleType="centerCrop"
             android:layout_margin="@dimen/spacing_medium"
             android:layout_gravity="center"/>

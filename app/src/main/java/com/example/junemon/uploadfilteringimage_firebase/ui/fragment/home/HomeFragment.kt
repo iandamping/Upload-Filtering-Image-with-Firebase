@@ -11,22 +11,22 @@ import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Compani
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.userDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
+import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.HomeFragmentAdapter
+import com.example.junemon.uploadfilteringimage_firebase.utils.alertHelper
 import kotlinx.android.synthetic.main.fragment_home.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.yesButton
 
 class HomeFragment : Fragment(), HomeFragmentView {
     private lateinit var presenter: HomeFragmentPresenter
     private var ctx: Context? = null
     private val userKeyPass = "asdwafas"
-    private var userName: String? = null
+    private var userData: UserModel? = null
     private var listAllData: MutableList<UploadImageModel> = mutableListOf()
 
-    fun newInstance(userName: String?): HomeFragment {
+    fun newInstance(userName: UserModel?): HomeFragment {
         val bundle = Bundle()
         val fragment = HomeFragment()
-        bundle.putString(userKeyPass, userName)
+        bundle.putParcelable(userKeyPass, userName)
         fragment.setArguments(bundle)
         return fragment
     }
@@ -34,14 +34,10 @@ class HomeFragment : Fragment(), HomeFragmentView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val args = arguments
-        userName = args?.getString(userKeyPass)
-        if (userName == null) {
+        userData = args?.getParcelable(userKeyPass)
+        if (userData?.name == null) {
             listAllData.clear()
-            ctx?.alert(ctx?.resources?.getString(R.string.login_failed)!!) {
-                yesButton {
-                    it.dismiss()
-                }
-            }?.show()
+            ctx?.alertHelper(ctx?.resources?.getString(R.string.login_failed)!!)
         }
 
     }
@@ -61,9 +57,9 @@ class HomeFragment : Fragment(), HomeFragmentView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        presenter.onSignOutAndCleanUp(userData?.name)
         presenter.onGetDataback()
 //        presenter.setAndGetDatauser(mFirebaseAuth.currentUser)
-        presenter.onSignOutAndCleanUp(userName)
     }
 
     override fun onGetDataback(data: UploadImageModel?) {

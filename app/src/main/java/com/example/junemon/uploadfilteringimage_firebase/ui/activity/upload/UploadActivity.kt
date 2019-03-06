@@ -11,17 +11,20 @@ import androidx.viewpager.widget.ViewPager
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.mDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.storageDatabaseReference
 import com.example.junemon.uploadfilteringimage_firebase.R
+import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
 import com.example.junemon.uploadfilteringimage_firebase.ui.adapter.imagefilteradapter.ViewPagerAdapter
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.edit.EditImageFragment
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.edit.EditImageListener
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter.FragmentFilterList
 import com.example.junemon.uploadfilteringimage_firebase.ui.fragment.imageeditor.filter.FragmentFilterListener
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.IMAGE_NAME
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestOpenCamera
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestSelectGalleryImage
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.maxHeight
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.maxWidth
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
+import com.example.junemon.uploadfilteringimage_firebase.utils.backToMainActivity
 import com.zomato.photofilters.imageprocessors.Filter
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter
@@ -31,7 +34,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton
 
 class UploadActivity : AppCompatActivity(),
-    UploadView, FragmentFilterListener, EditImageListener {
+        UploadView, FragmentFilterListener, EditImageListener {
 
     private var selectedUriForFirebase: Uri? = null
     private lateinit var presenter: UploadPresenter
@@ -45,8 +48,9 @@ class UploadActivity : AppCompatActivity(),
     private var saturationFinal = 1.0f
     private var contrastFinal = 1.0f
     private var stat: Boolean? = null
-    private var name: String? = null
-    private var userphoto: String? = null
+    private lateinit var userData: UserModel
+    //    private var name: String? = null
+//    private var userphoto: String? = null
     private var comment: String? = null
     private lateinit var BitmapUtils: ImageUtils
 
@@ -59,8 +63,9 @@ class UploadActivity : AppCompatActivity(),
         BitmapUtils = ImageUtils(this)
 
         loadImage()
-        name = intent.getStringExtra("userName")
-        userphoto = intent.getStringExtra("userPhoto")
+        userData = intent.getParcelableExtra(Constant.userPassedkey)
+//        name = userData.name
+//        userphoto = userData.userPhotoUrl
         setupViewPager(viewpager)
         tabs.setupWithViewPager(viewpager)
 
@@ -106,7 +111,7 @@ class UploadActivity : AppCompatActivity(),
                 }
             } else if (requestCode == RequestOpenCamera) {
                 val bitmap = BitmapUtils.decodeSampledBitmapFromFile(
-                    presenter.createImageFileFromPhoto(), reqWidth = maxWidth, reqHeight = maxHeight
+                        presenter.createImageFileFromPhoto(), reqWidth = maxWidth, reqHeight = maxHeight
                 )
                 clearBitmapMemory()
 
@@ -132,8 +137,8 @@ class UploadActivity : AppCompatActivity(),
             comment = etPhotoComment.text.toString().trim()
             if (selectedUriForFirebase != null) {
                 presenter.uploadImageToFirebase(
-                    storageDatabaseReference,
-                    mDatabaseReference, selectedUriForFirebase, name, userphoto, comment
+                        storageDatabaseReference,
+                        mDatabaseReference, selectedUriForFirebase, userData.name, userData.userPhotoUrl, comment
                 )
                 etPhotoComment.text = Editable.Factory.getInstance().newEditable("")
             } else {
@@ -145,6 +150,10 @@ class UploadActivity : AppCompatActivity(),
             }
         }
 
+    }
+
+    override fun onBackPressed() {
+        backToMainActivity()
     }
 
     override fun onFilterSelected(filter: Filter) {

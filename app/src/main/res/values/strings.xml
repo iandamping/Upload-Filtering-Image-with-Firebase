@@ -10,6 +10,9 @@
     <string name="facebook_application_id" translatable="false">357324104867730</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb357324104867730</string>
 
+    <string name="retrofit_header1">Authorization</string>
+    <string name="retrofit_header2">Content-Type</string>
+    <string name="retrofit_value_header2">application/json</string>
     <string name="fcm_key">AAAAw38pzfc:APA91bGnt2jmaekcrlw-0Zx0dtZIi3iwWtNVtcH3Vi0OxrqultTEq_LH3y0-M5gHJIYEMoZz6BTv3umnkiQBYjQHa-qJaG647pn6cPTK5_-EXt-MvAwdRy3Ux4XSNmgrpJtK3mYURbfM</string>
 
     <string name="activity_title_main">Filters</string>
@@ -27,6 +30,8 @@
     <string name="uploading_image">Uploading your awesome image</string>
     <string name="downloading_image">Downloading your awesome image</string>
     <string name="processing_image">Processing your awesome image</string>
+    <string name="removing_image">Removing your awesome image</string>
+    <string name="are_you_sure">"Are you sure want to delete ?"</string>
     <string name="please_wait">Please wait a bit…</string>
 
 

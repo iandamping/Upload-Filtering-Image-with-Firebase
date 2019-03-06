@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 
 class ChatSentViewholder(override val containerView: View, var ctx: Context?) : RecyclerView.ViewHolder(containerView),
-    LayoutContainer {
+        LayoutContainer {
 //    fun bindViews(chat: UploadImageModel, listener: (UploadImageModel) -> Unit) {
 //        tvMessageSent.text = chat.text
 //

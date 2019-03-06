@@ -1,38 +1,42 @@
 package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.home
 
 import android.content.Context
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import com.example.junemon.uploadfilteringimage_firebase.MainApplication.Companion.sentNotificationFirebase
+import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
 import com.example.junemon.uploadfilteringimage_firebase.data.HomeViewmodel
-import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.userLogin
+import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.userLogout
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.example.junemon.uploadfilteringimage_firebase.utils.deleteSpesificFirebaseData
+import com.example.junemon.uploadfilteringimage_firebase.utils.getAllData
+import com.example.junemon.uploadfilteringimage_firebase.utils.withViewModel
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.Query
 import com.google.firebase.storage.StorageReference
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.json.JSONObject
 
-class HomeFragmentPresenter(
-    var dataReference: DatabaseReference,
-    var userDataReference: DatabaseReference,
-    var mView: HomeFragmentView,
-    var target: Fragment
-) :
-    BaseFragmentPresenter, ChildEventListener {
+
+class HomeFragmentPresenter(var dataReference: DatabaseReference, var userDataReference: DatabaseReference, var mView: HomeFragmentView, var target: Fragment) : BaseFragmentPresenter {
     private var ctx: Context? = null
     private lateinit var utils: ImageUtils
-    private lateinit var uploadModel: UploadImageModel
-    private lateinit var vm: HomeViewmodel
+    private var json = JSONObject()
+    private var dataJson = JSONObject()
+    private lateinit var compose: CompositeDisposable
 
     override fun onAttach(context: Context?) {
         this.ctx = context
-        dataReference.addChildEventListener(this)
-        uploadModel = UploadImageModel()
         utils = ImageUtils(ctx)
-        vm = ViewModelProviders.of(target).get(HomeViewmodel::class.java)
+        target.getAllData(dataReference, userLogin)
+        compose = CompositeDisposable()
     }
 
     override fun onCreateView(view: View) {
@@ -41,40 +45,27 @@ class HomeFragmentPresenter(
 
     fun onSignOutAndCleanUp(username: String?) {
         if (username == null) {
-            dataReference.removeEventListener(this)
-            userDataReference.removeEventListener(this)
+            target.getAllData(dataReference, userLogout)
+            target.getAllData(userDataReference, userLogout)
         }
-    }
-
-    override fun onCancelled(p0: DatabaseError) {
-        //ini method yang di panggil ketika ada masalah biasanya karena tidak punya akses untuk membaca data
-    }
-
-    override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-        //ini method yang di panggil ketika data merubah posisi nya pada list
-    }
-
-    override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-        //ini method yang di panggil ketika ada perubahan pada data
-
-    }
-
-    override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-        //ini method yang pertama kali dipanggil ketika ada penambahan data
-        uploadModel = p0.getValue(UploadImageModel::class.java)!!
-        if (uploadModel != null) {
-            vm.setImageData(uploadModel)
-        }
-    }
-
-    override fun onChildRemoved(p0: DataSnapshot) {
-        //ini method yang di panggil ketika menghapus data
     }
 
     fun onGetDataback() {
-        vm.getImageData()?.observe(target.viewLifecycleOwner, Observer {
-            mView.onGetDataback(it)
-        })
+        target.withViewModel<HomeViewmodel> {
+            this.getImageData()?.observe(target.viewLifecycleOwner, Observer {
+                mView.onGetDataback(it)
+            })
+        }
+    }
+
+    fun deleteFirebaseImage(segment: String?) {
+        val dialogs = ctx?.indeterminateProgressDialog(
+                ctx?.resources?.getString(R.string.please_wait),
+                ctx?.resources?.getString(R.string.removing_image)
+        )
+        val data: Query? = dataReference.orderByChild("userPhotoLastPathSegment").equalTo(segment)
+        ctx?.deleteSpesificFirebaseData(data, dialogs)
+
     }
 
     fun saveFirebaseImageToGallery(storageReference: StorageReference, views: View, lastPathSegment: String?) {
@@ -83,6 +74,20 @@ class HomeFragmentPresenter(
 
     fun shareFirebaseImageThroughTelegram(lastPathSegment: String?) {
         utils.shareFirebaseImageThroughTelegram(lastPathSegment)
+    }
+
+    fun sentNotification(textPassed: String?, tittlePassed: String?, userToken: String?) {
+        dataJson.put("text", textPassed)
+        dataJson.put("tittle", tittlePassed)
+        dataJson.put("priority", "high")
+        json.put("notification", dataJson)
+        json.put("to", userToken)
+        compose.add(
+                sentNotificationFirebase.sentNotification(json).subscribeOn(Schedulers.io())
+                        .subscribe({ Toast.makeText(ctx, "Message done", Toast.LENGTH_SHORT).show() },
+                                { Log.e(this::class.java.simpleName, it.localizedMessage) })
+        )
+
     }
 
 }

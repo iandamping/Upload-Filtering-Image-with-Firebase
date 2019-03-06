@@ -41,12 +41,12 @@ class FragmentFilterList : Fragment(), FragmentFilterView {
 
     override fun getListFilter(allData: List<ThumbnailItem>?) {
         val space = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 8F,
-            getResources().getDisplayMetrics()
+                TypedValue.COMPLEX_UNIT_DIP, 8F,
+                getResources().getDisplayMetrics()
         )
         if (actualView != null) {
             actualView.rvFragmentFilterList.layoutManager =
-                LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+                    LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
             actualView.rvFragmentFilterList.itemAnimator = DefaultItemAnimator()
             actualView.rvFragmentFilterList.addItemDecoration(SpacesItemDecoration(space.toInt()))
             actualView.rvFragmentFilterList.adapter = ThumbnailsAdapter(ctx, allData!!) {

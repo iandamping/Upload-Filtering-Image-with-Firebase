@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_thumbnail_list.*
  */
 
 class ThumbnailsAdapter(var ctx: Context?, var listData: List<ThumbnailItem>, var listener: (ThumbnailItem) -> Unit) :
-    RecyclerView.Adapter<ThumbnailsAdapter.ThumbnailAdapterViewHolder>() {
+        RecyclerView.Adapter<ThumbnailsAdapter.ThumbnailAdapterViewHolder>() {
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ThumbnailAdapterViewHolder {
         val views: View = LayoutInflater.from(ctx).inflate(R.layout.item_thumbnail_list, p0, false)
         return ThumbnailAdapterViewHolder(views, ctx)
@@ -30,7 +30,7 @@ class ThumbnailsAdapter(var ctx: Context?, var listData: List<ThumbnailItem>, va
 
 
     class ThumbnailAdapterViewHolder(override val containerView: View, var ctx: Context?) : LayoutContainer,
-        RecyclerView.ViewHolder(containerView) {
+            RecyclerView.ViewHolder(containerView) {
         var selectedIndex = 0
         fun initData(data: ThumbnailItem, listener: (ThumbnailItem) -> Unit, positions: Int) {
             ivThumbnail.setImageBitmap(data.image)

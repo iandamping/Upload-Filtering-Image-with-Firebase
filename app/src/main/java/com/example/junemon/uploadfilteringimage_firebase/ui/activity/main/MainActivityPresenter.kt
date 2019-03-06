@@ -30,11 +30,16 @@ class MainActivityPresenter(var mView: MainActivityView) : BasePresenter {
 
     fun getUserData() {
         val userData = prefHelper.getUserLoginState()
-        if (!userData.equals(ctx.resources?.getString(R.string.user_logout), ignoreCase = true)) {
-            userModelData = gson.fromJson(userData, type)
-            mView.onGetDataBack(userModelData)
-        } else {
+        if (userData.isNullOrEmpty()) {
+            prefHelper.setUserLoginState(ctx.resources?.getString(R.string.user_logout))
+        }
+        if (userData != null) {
+            if (!userData.equals(ctx.resources?.getString(R.string.user_logout), ignoreCase = true)) {
+                userModelData = gson.fromJson(userData, UserModel::class.java)
+                mView.onGetDataBack(userModelData)
+            } else {
 //            mView.onFailedGetDataBack(ctx.resources?.getString(R.string.login_failed))
+            }
         }
     }
 

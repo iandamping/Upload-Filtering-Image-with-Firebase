@@ -15,4 +15,7 @@ object Constant {
     val saveFilterImagePath = "filterImage" + System.currentTimeMillis() + ".jpeg"
     val maxWidth = 612
     val maxHeight = 816
+    val userPassedkey = "users"
+    val userLogout = "logouts"
+    val userLogin = "login"
 }

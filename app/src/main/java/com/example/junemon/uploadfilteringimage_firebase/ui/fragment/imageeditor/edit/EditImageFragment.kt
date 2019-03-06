@@ -33,7 +33,7 @@ class EditImageFragment : Fragment(), EditImageView, SeekBar.OnSeekBarChangeList
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val views: View =
-            inflater.inflate(R.layout.fragment_edit_image, container, false)
+                inflater.inflate(R.layout.fragment_edit_image, container, false)
         actualView = views
         presenter.onCreateView(views)
         return views

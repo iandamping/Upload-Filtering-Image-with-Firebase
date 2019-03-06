@@ -14,11 +14,12 @@ import androidx.fragment.app.FragmentActivity
 import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BasePresenter
 import com.example.junemon.uploadfilteringimage_firebase.model.UploadImageModel
-import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainAppbarActivity
+import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainActivity
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestOpenCamera
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.RequestSelectGalleryImage
 import com.example.junemon.uploadfilteringimage_firebase.utils.Constant.saveCaptureImagePath
 import com.example.junemon.uploadfilteringimage_firebase.utils.ImageUtils
+import com.example.junemon.uploadfilteringimage_firebase.utils.startActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -78,15 +79,15 @@ class UploadPresenter(private val target: FragmentActivity, private val mView: U
             }.addOnSuccessListener {
                 spaceRef.downloadUrl.addOnSuccessListener {
                     //get the download url for image firebase storage
-                    uploads =
-                            UploadImageModel(comment, username, it.toString(), userPhoto, selectedImage.lastPathSegment)
+                    uploads = UploadImageModel(comment, username, it.toString(), userPhoto, selectedImage.lastPathSegment)
                     databaseReference.push().setValue(uploads).addOnCompleteListener {
                         //adding listener if it successfully upload progresdialog shutdown
                         if (it.isSuccessful) {
-                            intents.setClass(ctx, MainAppbarActivity::class.java)
                             dialogs.dismiss()
+                            ctx.startActivity<MainActivity>()
+//                            intents.setClass(ctx, MainActivity::class.java)
                             target.finish()
-                            ctx.startActivity(intents)
+//                            ctx.startActivity(intents)
                         }
                     }
                 }

@@ -1,7 +1,6 @@
 package com.example.junemon.uploadfilteringimage_firebase.ui.fragment.profile
 
 import android.content.Context
-import android.content.Intent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,13 +13,15 @@ import com.example.junemon.uploadfilteringimage_firebase.R
 import com.example.junemon.uploadfilteringimage_firebase.base.BaseFragmentPresenter
 import com.example.junemon.uploadfilteringimage_firebase.data.ProfileViewModel
 import com.example.junemon.uploadfilteringimage_firebase.model.UserModel
-import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainAppbarActivity
+import com.example.junemon.uploadfilteringimage_firebase.ui.activity.main.MainActivity
+import com.example.junemon.uploadfilteringimage_firebase.utils.alertHelper
+import com.example.junemon.uploadfilteringimage_firebase.utils.firebasenotif.saveProfileData
+import com.example.junemon.uploadfilteringimage_firebase.utils.getStringResources
+import com.example.junemon.uploadfilteringimage_firebase.utils.startActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.yesButton
 
 class ProfileFragmentPresenter(
         var mDatabaseReference: DatabaseReference,
@@ -31,7 +32,7 @@ class ProfileFragmentPresenter(
     private var ctx: Context? = null
     private lateinit var listener: FirebaseAuth.AuthStateListener
     private lateinit var userFromFirebase: UserModel
-    private lateinit var intentToMainActivity: Intent
+    //    private lateinit var intentToMainActivity: Intent
     private var jsonModelToString: String? = null
     private var currentUser: FirebaseUser? = null
     private var vm: ProfileViewModel? = null
@@ -41,7 +42,7 @@ class ProfileFragmentPresenter(
         this.ctx = context
         userPrivateToken()
         currentUser = mFirebaseAuth.currentUser
-        intentToMainActivity = Intent(ctx, MainAppbarActivity::class.java)
+//        intentToMainActivity = Intent(ctx, MainAppbarActivity::class.java)
         vm = ViewModelProviders.of(target).get(ProfileViewModel::class.java)
     }
 
@@ -65,7 +66,7 @@ class ProfileFragmentPresenter(
     fun setLogoutData() {
         ctx?.let { AuthUI.getInstance().signOut(it) }
         prefHelper.setUserLoginState(ctx?.resources?.getString(R.string.user_logout))
-        ctx?.startActivity(intentToMainActivity)
+        ctx?.startActivity<MainActivity>()
     }
 
     fun getUserData(users: UserModel?) {
@@ -79,20 +80,17 @@ class ProfileFragmentPresenter(
 
                 vm?.getFirebaseUser()?.observe(target.viewLifecycleOwner, Observer {
                     if (it != null) {
-                        userFromFirebase =
-                                UserModel(it.displayName, it.email, it.photoUrl.toString(), userToken, it.phoneNumber)
-                        mDatabaseReference.child(it.uid).setValue(userFromFirebase)
+                        userFromFirebase = UserModel(it.displayName, it.email, it.photoUrl.toString(), userToken, it.phoneNumber)
+                        mDatabaseReference.saveProfileData(it.uid, userFromFirebase)
+//                        mDatabaseReference.child(it.uid).setValue(userFromFirebase)
                         jsonModelToString = gson.toJson(userFromFirebase)
                         prefHelper.setUserLoginState(jsonModelToString)
-                        ctx?.startActivity(intentToMainActivity)
+                        ctx?.startActivity<MainActivity>()
+//                        ctx?.startActivity(intentToMainActivity)
                     }
                 })
             } else {
-                ctx?.alert(ctx?.resources?.getString(R.string.login_failed)!!) {
-                    yesButton {
-                        it.dismiss()
-                    }
-                }?.show()
+                ctx?.alertHelper(ctx?.getStringResources(R.string.login_failed))
             }
         }
     }
